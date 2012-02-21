@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GateLib", "GateLib\GateLib.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvoLib", "EvoLib\EvoLib.csproj", "{500986D2-4841-42E9-B2BA-425333650FF3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{54854185-1791-4F35-A50F-7A638DE49D0C}"
+	ProjectSection(SolutionItems) = preProject
+		README.mediawiki = README.mediawiki
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -25,6 +30,8 @@ Global
 		{645599A0-8030-41C6-B06C-C345A65A6A8F}.Debug|x86.Build.0 = Debug|Any CPU
 		{645599A0-8030-41C6-B06C-C345A65A6A8F}.Release|x86.ActiveCfg = Release|Any CPU
 		{645599A0-8030-41C6-B06C-C345A65A6A8F}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Tests\Tests.csproj
