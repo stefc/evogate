@@ -1,6 +1,6 @@
 using System;
 
-namespace stefc.gatelib
+namespace stefc.gatelib.contract
 {
 	public interface IFullAdder
 	{
