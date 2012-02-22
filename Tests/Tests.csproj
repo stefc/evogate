@@ -39,7 +39,7 @@
     </Reference>
     <Reference Include="nunit-console-runner, Version=2.5.10.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\usr\lib\nunit\nunit-console-runner.dll</HintPath>
+      <HintPath>..\..\..\..\..\usr\lib\nunit\nunit-console-runner.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

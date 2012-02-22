@@ -35,7 +35,7 @@ namespace stefc.gatelib
 	
 			bool c = or.Output(new Tuple<bool,bool>(ab_and_c,a_and_b));
 			
-			return new Tuple<bool, bool>(c,s);
+			return new Tuple<bool, bool>(s,c);
 		}
 	}
 }
