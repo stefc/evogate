@@ -38,6 +38,8 @@
     <Compile Include="StandardGates.cs" />
     <Compile Include="Contract\IFullAdder.cs" />
     <Compile Include="FullAdder.cs" />
+    <Compile Include="Contract\IFieldProgrammableGateArray.cs" />
+    <Compile Include="BitUtility.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

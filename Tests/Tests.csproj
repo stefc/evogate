@@ -46,6 +46,8 @@
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="TestGates.cs" />
+    <Compile Include="TestFPGA.cs" />
+    <Compile Include="TestBitUtility.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
