@@ -6,5 +6,12 @@ namespace stefc.gatelib.contract
 	{
 		bool Output(Tuple<bool,bool> input);
 	}
+	
+	public interface IFlowGate
+	{
+		event Action<bool> Out;
+		void A(bool input);
+        void B(bool input);
+	}
 }
 
