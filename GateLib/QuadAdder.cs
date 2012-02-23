@@ -14,34 +14,39 @@ namespace stefc.gatelib
 		
 		public static bool IsBit(int val, int bit)
 		{
-			
 			return (val & (1 << bit)) == (1 << bit);
 		}
 		
-		public static byte BitMask(bool val, byte bit)
+		public static int BitMask(bool val, int bit)
 		{
-			return val ? (byte)(1 << bit) : (byte)0;
+			return val ? (1 << bit) : 0;
 		}
 		
 		public Tuple<byte,bool> Output(Tuple<byte,byte,bool> input)
 		{
-			Tuple<bool,bool> a = 
-				adders[0].Output(Join(input,input.Item3,0));
-					
-			Tuple<bool,bool> b = 
-				adders[1].Output(Join(input,a.Item2,1));
-			
-			Tuple<bool,bool> c = 
-				adders[2].Output(Join(input,b.Item2,2));
-			
-			Tuple<bool,bool> d = 
-				adders[3].Output(Join(input,c.Item2,3));
+			Tuple<bool,bool>[] result = new Tuple<bool, bool>[4];
+			result[0] = adders[0].Output(Join(input,input.Item3,0));
+			result[1] = adders[1].Output(Join(input,result[0].Item2,1));
+			result[2] = adders[2].Output(Join(input,result[1].Item2,2));
+			result[3] = adders[3].Output(Join(input,result[2].Item2,3));
 			
 			// Result 
-			byte s = (byte)(BitMask(a.Item1,0) | BitMask(b.Item1,1) | BitMask(c.Item1,2) | BitMask(d.Item1,3));
-			bool cOut = d.Item2;
+			/*
+			byte s = (byte)
+			(BitMask(result[0].Item1,0) | 
+				BitMask(result[1].Item1,1) | 
+				BitMask(result[2].Item1,2) | 
+				BitMask(result[3].Item1,3)); */
+			int index=0;
+			int s = 0;
+			foreach(Tuple<bool,bool> val in result)
+			{
+				s |= BitMask(val.Item1,index++);
+			}
 			
-			return new Tuple<byte,bool>(s,cOut);
+			bool cOut = result[3].Item2;
+			
+			return new Tuple<byte,bool>((byte)s,cOut);
 		}
 		
 		private static Tuple<bool,bool,bool> Join(Tuple<byte,byte,bool> input, bool cIn, byte bit)
