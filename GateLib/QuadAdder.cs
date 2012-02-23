@@ -11,17 +11,7 @@ namespace stefc.gatelib
 		{
 			adders = new IFullAdder[4]{new FullAdder(),new FullAdder(),new FullAdder(),new FullAdder()};	
 		}
-		
-		public static bool IsBit(int val, int bit)
-		{
-			return (val & (1 << bit)) == (1 << bit);
-		}
-		
-		public static int BitMask(bool val, int bit)
-		{
-			return val ? (1 << bit) : 0;
-		}
-		
+			
 		public Tuple<byte,bool> Output(Tuple<byte,byte,bool> input)
 		{
 			Tuple<bool,bool>[] result = new Tuple<bool, bool>[4];
@@ -37,11 +27,11 @@ namespace stefc.gatelib
 				BitMask(result[1].Item1,1) | 
 				BitMask(result[2].Item1,2) | 
 				BitMask(result[3].Item1,3)); */
-			int index=0;
+			byte index=0;
 			int s = 0;
 			foreach(Tuple<bool,bool> val in result)
 			{
-				s |= BitMask(val.Item1,index++);
+				s |= BitUtility.BitMask(val.Item1,index++);
 			}
 			
 			bool cOut = result[3].Item2;
@@ -51,7 +41,9 @@ namespace stefc.gatelib
 		
 		private static Tuple<bool,bool,bool> Join(Tuple<byte,byte,bool> input, bool cIn, byte bit)
 		{
-			return new Tuple<bool, bool, bool>(IsBit(input.Item1,bit),IsBit(input.Item2,bit),cIn);
+			return new Tuple<bool, bool, bool>(
+				BitUtility.IsBit(input.Item1,bit),
+				BitUtility.IsBit(input.Item2,bit),cIn);
 		}
 	}
 }

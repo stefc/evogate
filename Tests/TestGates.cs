@@ -54,26 +54,6 @@ namespace Tests
 		}
 		
 		[Test]
-		public void BitMasking()
-		{
-			Assert.IsTrue(QuadAdder.IsBit(0x0F,0));
-			Assert.IsTrue(QuadAdder.IsBit(0x0F,1));
-			Assert.IsTrue(QuadAdder.IsBit(0x0F,2));
-			Assert.IsTrue(QuadAdder.IsBit(0x0F,3));
-			
-			Assert.IsTrue(QuadAdder.IsBit(0x01,0));
-			Assert.IsTrue(QuadAdder.IsBit(0x02,1));
-			Assert.IsTrue(QuadAdder.IsBit(0x04,2));
-			Assert.IsTrue(QuadAdder.IsBit(0x08,3));
-			
-			Assert.IsFalse(QuadAdder.IsBit(0x00,0));
-			Assert.IsFalse(QuadAdder.IsBit(0x00,1));
-			Assert.IsFalse(QuadAdder.IsBit(0x00,2));
-			Assert.IsFalse(QuadAdder.IsBit(0x00,3));			
-		}
-		
-		
-		[Test]
 		public void TestQuadAdder()
 		{
 			IQuadAdder adder = new QuadAdder();
