@@ -42,6 +42,8 @@
     <Compile Include="BitUtility.cs" />
     <Compile Include="Contract\IQuadAdder.cs" />
     <Compile Include="QuadAdder.cs" />
+    <Compile Include="PinWire.cs" />
+    <Compile Include="FPGA.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

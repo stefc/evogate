@@ -8,19 +8,37 @@ namespace Tests
 	[TestFixture]
 	public class TestGates
 	{
+		[Test]	
+		public void TestFlowGates()
+		{
+			this.CheckGate((IFlowGate)new AndGate(), new bool[]{false, false, false, true});
+			this.CheckGate((IFlowGate)new OrGate(), new bool[]{false, true, true, true});
+			this.CheckGate((IFlowGate)new NandGate(), new bool[]{true, true, true, false});
+			this.CheckGate((IFlowGate)new NorGate(), new bool[]{true, false, false, false});
+			this.CheckGate((IFlowGate)new XorGate(), new bool[]{false, true, true, false});
+			this.CheckGate((IFlowGate)new XnorGate(), new bool[]{true, false, false, true});
+		}
 		
 		[Test]
 		public void TestStandardGates()
 		{
-			this.CheckGate(new AndGate(), new bool[]{false, false, false, true});
-			this.CheckGate(new OrGate(), new bool[]{false, true, true, true});
-			this.CheckGate(new NandGate(), new bool[]{true, true, true, false});
-			this.CheckGate(new NorGate(), new bool[]{true, false, false, false});
-			this.CheckGate(new XorGate(), new bool[]{false, true, true, false});
-			this.CheckGate(new XnorGate(), new bool[]{true, false, false, true});
+			this.CheckGate((IGate)new AndGate(), new bool[]{false, false, false, true});
+			this.CheckGate((IGate)new OrGate(), new bool[]{false, true, true, true});
+			this.CheckGate((IGate)new NandGate(), new bool[]{true, true, true, false});
+			this.CheckGate((IGate)new NorGate(), new bool[]{true, false, false, false});
+			this.CheckGate((IGate)new XorGate(), new bool[]{false, true, true, false});
+			this.CheckGate((IGate)new XnorGate(), new bool[]{true, false, false, true});
 		}
 		
 		private void CheckGate(IGate gate, bool[] results)
+		{
+			this.CheckGate(gate, false, false, results[0]); 			
+			this.CheckGate(gate, false, true,  results[1]);	
+			this.CheckGate(gate, true,  false, results[2]);
+			this.CheckGate(gate, true,  true,  results[3]);
+		}
+		
+		private void CheckGate(IFlowGate gate, bool[] results)
 		{
 			this.CheckGate(gate, false, false, results[0]); 			
 			this.CheckGate(gate, false, true,  results[1]);	
@@ -32,6 +50,24 @@ namespace Tests
 		{
 			Assert.AreEqual(q, gate.Output(new Tuple<bool,bool>(x,y)));
 		}
+		
+		private void CheckGate(IFlowGate gate, bool x, bool y, bool q)
+		{
+			bool wasFired = false;
+			Action<bool> action = (signal) => {
+				Assert.AreEqual(q, signal);	
+				wasFired=true;
+			};
+			
+			gate.Out += action;
+			
+			gate.A(x);
+			gate.B(y);
+			
+			gate.Out -= action;
+			
+			Assert.IsTrue(wasFired,"No fired!");
+		}	
 		
 		[Test]
 		public void TestFullAdder()
