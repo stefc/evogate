@@ -7,36 +7,32 @@ namespace stefc.gatelib
 {
 	public class FPGA : IFieldProgrammableGateArray
 	{
-		private readonly int input; 
-		private readonly int output;
-		private readonly int gates;
-		
+		private readonly Wiring wiring;
 		private readonly List<IFlowGate> network;
 		
-		public FPGA (int input, int output, int gates)
+		public FPGA (Wiring wiring)
 		{	
-			this.input=input;
-			this.output=output;
-			this.gates=gates;
+			this.wiring = wiring;
 			
-			this.network = new List<IFlowGate>(gates);
-			for(int i=0; i<gates; i++)
+			this.network = new List<IFlowGate>(wiring.Gates);
+			for(int i=0; i<wiring.Gates; i++)
 				this.network.Add(new NandGate());
+			
 		}
 		
 		public BitArray Output(BitArray input)
 		{
-			BitArray result = new BitArray(this.output);
-			for(int i=0; i<this.output; i++)
+			BitArray result = new BitArray(this.wiring.Output);
+			for(int i=0; i<this.wiring.Output; i++)
 			{
-				this.network[this.gates-i-1].Out += CreatePin(result,i);
+				this.network[this.wiring.Gates-i-1].Out += CreatePin(result,i);
 			}
 			
 			
 			
-			for(int i=0; i<this.output; i++)
+			for(int i=0; i<this.wiring.Output; i++)
 			{
-				this.network[this.gates-i-1].Out -= CreatePin(result,i);
+				this.network[this.wiring.Gates-i-1].Out -= CreatePin(result,i);
 			}
 			
 			return result;

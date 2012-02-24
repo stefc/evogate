@@ -46,13 +46,6 @@ namespace stefc.gatelib
 			return val ? (1 << bit) : 0;
 		}
 		
-		public static BitArray CreateWiring(int input, int gates,int output)
-		{
-			int rows = input+gates-output;
-			int cols = gates*2;   // gates 
-			BitArray wiring = new BitArray(rows*cols);
-			return wiring;
-		}
 	}
 }
 

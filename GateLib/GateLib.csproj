@@ -44,6 +44,7 @@
     <Compile Include="QuadAdder.cs" />
     <Compile Include="PinWire.cs" />
     <Compile Include="FPGA.cs" />
+    <Compile Include="Wiring.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
