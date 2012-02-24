@@ -5,45 +5,36 @@ namespace stefc.gatelib
 {
 	public class QuadAdder : IQuadAdder
 	{
-		private readonly IFullAdder[] adders;
+		private readonly IFullAdder adder;
 		
 		public QuadAdder ()
 		{
-			adders = new IFullAdder[4]{new FullAdder(),new FullAdder(),new FullAdder(),new FullAdder()};	
+			adder = new FullAdder();
 		}
 			
 		public Tuple<byte,bool> Output(Tuple<byte,byte,bool> input)
 		{
-			Tuple<bool,bool>[] result = new Tuple<bool, bool>[4];
-			result[0] = adders[0].Output(Join(input,input.Item3,0));
-			result[1] = adders[1].Output(Join(input,result[0].Item2,1));
-			result[2] = adders[2].Output(Join(input,result[1].Item2,2));
-			result[3] = adders[3].Output(Join(input,result[2].Item2,3));
-			
-			// Result 
-			/*
-			byte s = (byte)
-			(BitMask(result[0].Item1,0) | 
-				BitMask(result[1].Item1,1) | 
-				BitMask(result[2].Item1,2) | 
-				BitMask(result[3].Item1,3)); */
-			byte index=0;
-			int s = 0;
-			foreach(Tuple<bool,bool> val in result)
-			{
-				s |= BitUtility.BitMask(val.Item1,index++);
-			}
-			
-			bool cOut = result[3].Item2;
-			
+			bool[] result = new bool[4];
+			bool cOut = SingleAdd(input,result,0,input.Item3);
+			int s = AggregateOr(result,0);		
 			return new Tuple<byte,bool>((byte)s,cOut);
 		}
-		
-		private static Tuple<bool,bool,bool> Join(Tuple<byte,byte,bool> input, bool cIn, byte bit)
+			
+		private bool SingleAdd(Tuple<byte,byte,bool> input, bool[] result, int bit, bool cIn)
 		{
-			return new Tuple<bool, bool, bool>(
-				BitUtility.IsBit(input.Item1,bit),
-				BitUtility.IsBit(input.Item2,bit),cIn);
+			if(bit==result.Length) return cIn;
+			Tuple<bool,bool> output = adder.Output(
+				new Tuple<bool, bool, bool>(
+					BitUtility.IsBit(input.Item1,bit),
+					BitUtility.IsBit(input.Item2,bit),cIn));
+			result[bit]=output.Item1;
+			return SingleAdd(input,result,bit+1,output.Item2);
+		}
+		
+		private int AggregateOr(bool[] input, byte bit)
+		{
+			if(bit==input.Length) return 0;
+			return BitUtility.BitMask(input[bit],bit) | AggregateOr(input,(byte)(bit+1));
 		}
 	}
 }
