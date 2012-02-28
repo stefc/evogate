@@ -16,7 +16,7 @@ namespace Tests
 		
 			Wiring singleNand = new Wiring(3,2,14);
 			
-			Console.WriteLine(singleNand);
+//			Console.WriteLine(singleNand);
 			
 		}
 	}

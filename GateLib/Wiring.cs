@@ -13,6 +13,10 @@ namespace stefc.gatelib
 		
 		public Wiring (int input, int output, int gates)
 		{
+			if(input<=0) throw new ArgumentException("input");
+			if(output<=0) throw new ArgumentException("output");
+			if(gates<=0) throw new ArgumentException("gates");
+			
 			this.input=input;
 			this.output=output;
 			this.gates=gates;
@@ -53,7 +57,10 @@ namespace stefc.gatelib
 		}
 		public override string ToString ()
 		{
-			return BitUtility.BitsToString(wiring, gates*2, output, input);
+			return 
+				String.Format("{0}-{1}-{2}\n{3}",
+					input,output,gates,
+					BitUtility.BitsToString(wiring,gates*2, 2));
 		}
 	}
 }

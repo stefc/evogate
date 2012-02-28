@@ -15,11 +15,9 @@ namespace Tests
 			BitArray bits = new BitArray(6*2*4,true);
 			
 			string exp = string.Join(string.Empty, 
-				Enumerable.Repeat("11 11 11\n",4)
-				.Concat(new string[]{"\n"})
-				.Concat(Enumerable.Repeat("11 11 11\n",4)).ToArray());
+				Enumerable.Repeat("11 11 11\n",6+2).ToArray());
 			
-			Assert.AreEqual(exp,BitUtility.BitsToString(bits,6,2,4));
+			Assert.AreEqual(exp,BitUtility.BitsToString(bits,6,2));
 		}
 		
 		[Test]

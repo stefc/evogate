@@ -7,14 +7,12 @@ namespace stefc.gatelib
 {
 	public static class BitUtility
 	{
-		public static string BitsToString(BitArray bits, int linebreak, int separator, int inputs)
+		public static string BitsToString(BitArray bits, int linebreak, int separator)
 		{
 			string result=String.Empty;
 			for(int i= 0; i<bits.Count; i++)
 			{
 				result += (bits[i] ? "1":"0");
-				if( (i+1) == (linebreak*inputs))
-					result += Environment.NewLine;
 				
 				if(((i+1) % linebreak)==0)
 					result += Environment.NewLine;
