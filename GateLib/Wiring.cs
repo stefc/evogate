@@ -55,6 +55,18 @@ namespace stefc.gatelib
 				wiring[ofs+1]=true;
 			}
 		}
+		
+		public void Wire(int src, int dest, PinWire wire)
+		{
+			this.Wire(false,src,dest,wire);
+		}
+		
+		public void InWire(int src, int dest, PinWire wire)
+		{
+			this.Wire(true,src,dest,wire);
+		}
+		
+		
 		public override string ToString ()
 		{
 			return 
