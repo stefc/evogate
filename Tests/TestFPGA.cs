@@ -9,14 +9,14 @@ namespace Tests
 	{
 		const string ONE_BIT_ADDER = 
 			@"3-2-14
-00 00 00 10 00 11 00 00 00 00 10 00 00 00
+00 00 00 00 10 11 00 00 00 00 10 00 00 00
 11 00 10 00 00 00 00 10 00 00 00 00 00 00
 00 11 01 00 00 00 01 00 00 00 00 00 00 00
 00 00 00 10 00 00 10 00 00 00 00 00 00 00
-00 00 00 01 00 00 00 01 10 00 00 00 00 00
+00 00 00 01 00 00 00 01 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 01 00 00 00 10 00
-00 00 00 00 01 00 00 00 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 10 00
+00 00 00 00 01 00 00 00 10 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 01 00
 00 00 00 00 00 00 00 00 00 00 00 10 00 00
 00 00 00 00 00 00 00 00 00 10 00 00 00 00
 00 00 00 00 00 00 00 00 00 01 00 00 00 00
@@ -26,6 +26,24 @@ namespace Tests
 00 00 00 00 00 00 00 00 00 00 00 00 00 10
 ";
 		
+		/*
+00 00 00 00 10 11 00 00 00 00 10 00 00 00
+11 00 10 00 00 00 00 10 00 00 00 00 00 00
+00 11 01 00 00 00 01 00 00 00 00 00 00 00
+00 00 00 10 00 00 10 00 00 00 00 00 00 00
+00 00 00 01 00 00 00 01 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 01 00 00 00 10 00
+00 00 00 00 01 00 00 00 10 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 01 00
+00 00 00 00 00 00 00 00 00 00 00 10 00 00
+00 00 00 00 00 00 00 00 00 10 00 00 00 00
+00 00 00 00 00 00 00 00 00 01 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 01 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 01 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 01
+00 00 00 00 00 00 00 00 00 00 00 00 00 10
+
+*/
 		[Test]
 		public void TestSimpleNand()
 		{
@@ -35,9 +53,11 @@ namespace Tests
 		
 			Wiring singleNand = Create1BitAdder();
 			
+			Console.WriteLine(singleNand);
+			
 			Assert.AreEqual(ONE_BIT_ADDER, singleNand.ToString());
 			
-			Console.WriteLine(singleNand);
+			// Console.WriteLine(singleNand);
 			
 		}
 		
@@ -73,34 +93,34 @@ namespace Tests
 			result.InWire(IN_B,  GATE_3, PinWire.A);
 			result.InWire(IN_C,  GATE_3, PinWire.B);
 			
-			result.InWire(IN_A,  GATE_4, PinWire.A);
 			result.Wire(GATE_1,  GATE_4, PinWire.A);
 			result.Wire(GATE_2,  GATE_4, PinWire.B);
 			
+			result.InWire(IN_A,  GATE_5, PinWire.A);
 			result.Wire(GATE_4,  GATE_5, PinWire.B);
 			
 			result.InWire(IN_A,  GATE_6, PinWire.Both);
 			
-			result.InWire(IN_C,  GATE_7, PinWire.B);
 			result.Wire(GATE_1,  GATE_7, PinWire.A);
+			result.InWire(IN_C,  GATE_7, PinWire.B);
 			
 			result.InWire(IN_B,  GATE_8, PinWire.A);
 			result.Wire(GATE_2,  GATE_8, PinWire.B);
 
+			result.Wire(GATE_4,  GATE_9, PinWire.A);
 			result.Wire(GATE_3,  GATE_9, PinWire.B);
-			result.Wire(GATE_2,  GATE_9, PinWire.A);
-		
+			
 			result.Wire(GATE_7, GATE_10, PinWire.A);
 			result.Wire(GATE_8, GATE_10, PinWire.B);
-						
+			
 			result.InWire(IN_A, GATE_11, PinWire.A);
 			result.Wire(GATE_9, GATE_11, PinWire.B);
 			
 			result.Wire(GATE_6, GATE_12, PinWire.A);
 			result.Wire(GATE_10, GATE_12, PinWire.B);
-			
-			result.Wire(GATE_5, GATE_13, PinWire.A);
+
 			result.Wire(GATE_3, GATE_13, PinWire.A);
+			result.Wire(GATE_5, GATE_13, PinWire.B);
 
 			result.Wire(GATE_12, GATE_14, PinWire.A); 
 			result.Wire(GATE_11, GATE_14, PinWire.B);
