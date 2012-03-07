@@ -33,6 +33,18 @@ namespace stefc.gatelib
 			return result;
 		} 
 		
+		public static BitArray ByteToBits(byte value)
+		{
+			return new BitArray(new byte[]{value});
+		}
+		
+		public static byte BitsToByte(BitArray bits)
+		{
+			byte[] result=new byte[1];
+			bits.CopyTo(result,0);
+			return result[0];
+		}
+		
 		public static bool IsBit(int val, int bit)
 		{
 			

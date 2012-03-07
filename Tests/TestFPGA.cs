@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using NUnit.Framework;
 using stefc.gatelib;
 
@@ -27,38 +28,68 @@ namespace Tests
 ";
 		
 		/*
-00 00 00 00 10 11 00 00 00 00 10 00 00 00
-11 00 10 00 00 00 00 10 00 00 00 00 00 00
-00 11 01 00 00 00 01 00 00 00 00 00 00 00
-00 00 00 10 00 00 10 00 00 00 00 00 00 00
-00 00 00 01 00 00 00 01 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 01 00 00 00 10 00
-00 00 00 00 01 00 00 00 10 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 01 00
-00 00 00 00 00 00 00 00 00 00 00 10 00 00
-00 00 00 00 00 00 00 00 00 10 00 00 00 00
-00 00 00 00 00 00 00 00 00 01 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 01 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 01 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 01
-00 00 00 00 00 00 00 00 00 00 00 00 00 10
+		 * 
+		 * 3,3 => A
+3,6 => A
+4,3 => B
+4,7 => B
+5,8 => B
+5,12 => A
+6,4 => B
+6,8 => A
+7,12 => B
+8,11 => A
+9,9 => A
+10,9 => B
+11,10 => B
+3,3 => A
+3,6 => A
+4,3 => B
+4,7 => B
+5,8 => B
+5,12 => A
+6,4 => B
+6,8 => A
+7,12 => B
+8,11 => A
+9,9 => A
+10,9 => B
+11,10 => B
 
 */
-		[Test]
-		public void TestSimpleNand()
+		[Test,Ignore]
+		public void TestSimple1BitAdder()
 		{
 			
 			// 2 Input's = 1 Output = 1 Gate NAND
 			// muss identisch zu einzelnen NAND Gate sein 
 		
-			Wiring singleNand = Create1BitAdder();
+			Wiring wiring = Create1BitAdder();
 			
-			Console.WriteLine(singleNand);
 			
-			Assert.AreEqual(ONE_BIT_ADDER, singleNand.ToString());
+			Assert.AreEqual(PinWire.A, wiring.GetWire(0,4));
+			Assert.AreEqual(PinWire.Both, wiring.GetWire(0,5));
+			Assert.AreEqual(PinWire.A, wiring.GetWire(0,10));
+			Assert.AreEqual(PinWire.None, wiring.GetWire(0,11));
+			//	Console.WriteLine(singleNand);
 			
-			// Console.WriteLine(singleNand);
+			Assert.AreEqual(ONE_BIT_ADDER, wiring.ToString());		
 			
+			FPGA oneBitAdder = new FPGA(wiring);
+			
+			BitArray result;
+			
+			// 0 + 0 + (0) = 0 (0)
+			result = oneBitAdder.Output(CreateInput(false,false,false));
+			Assert.AreEqual(2,result.Length);
+			Assert.IsFalse(result[0]);
+			Assert.IsFalse(result[1]);
+			
+			// 1 + 0 + (0) = 1 (0)
+			result = oneBitAdder.Output(CreateInput(true,false,false));
+			Assert.AreEqual(2,result.Length);
+			Assert.IsTrue(result[0]);
+			Assert.IsFalse(result[1]);
 		}
 		
 		private Wiring Create1BitAdder()
@@ -127,6 +158,13 @@ namespace Tests
 			
 			return result;
 		}
+		
+		private BitArray CreateInput(bool A, bool B, bool C)
+		{
+			return new BitArray(new bool[]{A,B,C});
+		}
+		
+		
 		
 		/*
 3-2-14

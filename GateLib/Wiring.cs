@@ -36,6 +36,18 @@ namespace stefc.gatelib
 		public int Gates
 		{ get { return gates; }}
 		
+		public PinWire GetWire(int src, int dest)
+		{
+			int cols = gates * 2;
+			int ofs = (src * cols) + (dest*2);
+			if (wiring[ofs] && wiring[ofs+1])
+				return PinWire.Both;
+			else if(wiring[ofs])
+				return PinWire.A;
+			else if (wiring[ofs+1])
+				return PinWire.B;
+			return PinWire.None;
+		}			
 		
 		public void Wire(bool isInput, int src, int dest, PinWire wire)
 		{

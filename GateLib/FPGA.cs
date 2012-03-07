@@ -28,7 +28,45 @@ namespace stefc.gatelib
 				this.network[this.wiring.Gates-i-1].Out += CreatePin(result,i);
 			}
 			
+			// wiring 
+			for(int i=this.wiring.Input; i<this.wiring.Gates-this.wiring.Output; i++)
+				for(int j=0; j<this.wiring.Gates; j++)
+				{
+					PinWire pin = this.wiring.GetWire(i,j);
+					if(pin != PinWire.None)
+					{
+						this.network[i].Out += Connect(j,pin);
+						Console.WriteLine("{0},{1} => {2}", i,j, pin);
+					}
+				}
 			
+			
+			// input 
+			for(int i=0; i<this.wiring.Input; i++)
+			{
+				for(int j=0; j<this.wiring.Gates; j++)
+				{
+					PinWire pin = this.wiring.GetWire(i,j);
+					if(pin == PinWire.A)
+						this.network[j].A(input[i]);
+					else if(pin == PinWire.B)
+						this.network[j].B(input[i]);
+					else if(pin == PinWire.Both)
+					{
+						this.network[j].A(input[i]);
+						this.network[j].B(input[i]);
+					}
+				}
+			}
+			
+			// wiring 
+			for(int i=this.wiring.Input; i<this.wiring.Gates-this.wiring.Output; i++)
+				for(int j=0; j<this.wiring.Gates; j++)
+				{
+					PinWire pin = this.wiring.GetWire(i,j);
+					if(pin != PinWire.None)
+						this.network[i].Out -= Connect(j,pin);
+				}
 			
 			for(int i=0; i<this.wiring.Output; i++)
 			{
@@ -41,6 +79,23 @@ namespace stefc.gatelib
 		private Action<bool> CreatePin(BitArray output, int port)
 		{
 			return signal => output.Set(port,signal);
+		}
+		
+		private Action<bool> Connect(int src, PinWire pin)
+		{
+			
+			return (s) => 
+			{
+				if(pin == PinWire.A)
+					this.network[src].A(s);
+				else if(pin == PinWire.B)
+					this.network[src].B(s);
+				else if(pin == PinWire.Both)
+				{
+					this.network[src].A(s);
+					this.network[src].B(s);
+				}
+			};
 		}
 	}
 }

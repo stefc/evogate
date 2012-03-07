@@ -38,6 +38,31 @@ namespace Tests
 			Assert.IsFalse(BitUtility.IsBit(0x00,2));
 			Assert.IsFalse(BitUtility.IsBit(0x00,3));			
 		}
+		
+		[Test]
+		public void TestBitsToByte()
+		{
+			BitArray bits = BitUtility.ByteToBits(255);
+			Assert.AreEqual(8, bits.Count);
+			for(int i=0; i<8; i++)
+				Assert.IsTrue(bits[i]);
+			Assert.AreEqual(255,BitUtility.BitsToByte(bits));
+			
+			bits = BitUtility.ByteToBits(0);
+			for(int i=0; i<8; i++)
+				Assert.IsFalse(bits[i]);
+			Assert.AreEqual(0,BitUtility.BitsToByte(bits));
+			
+			bits = BitUtility.ByteToBits(1);
+			Assert.IsTrue(bits[0]);
+			Assert.IsFalse(bits[7]);
+			Assert.AreEqual(1,BitUtility.BitsToByte(bits));
+			
+			bits = BitUtility.ByteToBits(128);
+			Assert.IsFalse(bits[0]);
+			Assert.IsTrue(bits[7]);
+			Assert.AreEqual(128,BitUtility.BitsToByte(bits));
+		}
 	}
 }
 
