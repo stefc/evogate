@@ -8,6 +8,28 @@ namespace Tests
 	[TestFixture()]
 	public class TestFPGA
 	{
+		const string XOR_GATE = 
+			@"2-1-4
+10 10 00 00
+01 00 01 00
+00 01 10 00
+00 00 00 10
+00 00 00 01
+";
+		
+		
+/*		
+set 0,A
+set 8,B
+set 2,A
+set 12,B
+
+set 18,B
+set 20,A
+set 30,A
+set 38,B
+		 */
+		
 		const string ONE_BIT_ADDER = 
 			@"3-2-14
 00 00 00 00 10 11 00 00 00 00 10 00 00 00
@@ -92,6 +114,58 @@ namespace Tests
 			Assert.IsFalse(result[1]);
 		}
 		
+		[Test]
+		public void TestXorGate()
+		{
+			Wiring wiring = CreateXorGate();
+			// Console.WriteLine (wiring.ToString());
+			Assert.AreEqual(XOR_GATE, wiring.ToString());
+			FPGA xorGate = new FPGA(wiring);
+		
+			Func<bool,bool,bool> calc = (x,y) =>
+			{
+				BitArray result = xorGate.Output(CreateInput(x,y));
+				Assert.AreEqual(1,result.Count);
+				return result[0];
+			};
+			
+			//Assert.IsFalse(calc(false,false));
+			//Assert.IsFalse(calc(true,true));
+			Assert.IsTrue(calc(true,false));
+			//Assert.IsTrue(calc(false,true));
+			
+			
+		}
+		
+		private Wiring CreateXorGate()
+		{
+			Wiring result = new Wiring(2,1,4);
+			
+			const int IN_A = 0;
+			const int IN_B = 1;
+			
+			const int GATE_1 = 0;
+			const int GATE_2 = 1;
+			const int GATE_3 = 2;
+			const int GATE_4 = 3;
+			
+			Console.WriteLine ("Start-Wiring");
+			
+			result.InWire(IN_A, GATE_1, PinWire.A);
+			result.InWire(IN_B,	GATE_1, PinWire.B);
+			result.InWire(IN_A, GATE_2, PinWire.A);
+			result.InWire(IN_B, GATE_3, PinWire.B);
+			
+			result.Wire(GATE_1,  GATE_2, PinWire.B);
+			result.Wire(GATE_1,  GATE_3, PinWire.A);
+			
+			result.Wire(GATE_2,  GATE_4, PinWire.A);
+			result.Wire(GATE_3,  GATE_4, PinWire.B);
+			Console.WriteLine ("End-Wiring");
+			
+			return result;
+		}
+		
 		private Wiring Create1BitAdder()
 		{
 			Wiring result = new Wiring(3,2,14);
@@ -164,30 +238,13 @@ namespace Tests
 			return new BitArray(new bool[]{A,B,C});
 		}
 		
+		private BitArray CreateInput(bool A, bool B)
+		{
+			return new BitArray(new bool[]{A,B});
+		}
 		
 		
-		/*
-3-2-14
-
-0. 1. 2. -  4. 5. 6. 7. -  -  10.-  -  - 		
-00 00 00 00 10 11 00 00 00 00 10 00 00 00	#0	
-11 00 10 00 00 00 00 10 00 00 00 00 00 00	#1
-00 11 01 00 00 00 01 00 00 00 00 00 00 00	#2
-
-00 00 00 10 00 00 10 00 00 00 00 00 00 00
-00 00 00 01 00 00 00 01 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 01 00 00 00 10 00
-00 00 00 00 01 00 00 00 10 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 10 00
-00 00 00 00 00 00 00 00 00 00 00 10 00 00
-00 00 00 00 00 00 00 00 00 10 00 00 00 00
-00 00 00 00 00 00 00 00 00 01 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 01 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 01 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 01
-00 00 00 00 00 00 00 00 00 00 00 00 00 10		
-*/
-
+	
 	}
 }
 

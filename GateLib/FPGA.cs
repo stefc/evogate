@@ -23,67 +23,94 @@ namespace stefc.gatelib
 		public BitArray Output(BitArray input)
 		{
 			BitArray result = new BitArray(this.wiring.Output);
-			for(int i=0; i<this.wiring.Output; i++)
-			{
-				this.network[this.wiring.Gates-i-1].Out += CreatePin(result,i);
-			}
+			DoOutput(true, result);
 			
-			// wiring 
-			for(int i=this.wiring.Input; i<this.wiring.Gates-this.wiring.Output; i++)
-				for(int j=0; j<this.wiring.Gates; j++)
-				{
-					PinWire pin = this.wiring.GetWire(i,j);
-					if(pin != PinWire.None)
-					{
-						this.network[i].Out += Connect(j,pin);
-						Console.WriteLine("{0},{1} => {2}", i,j, pin);
-					}
-				}
+			// wiring
+			DoWire(true);
 			
 			
 			// input 
-			for(int i=0; i<this.wiring.Input; i++)
-			{
-				for(int j=0; j<this.wiring.Gates; j++)
-				{
-					PinWire pin = this.wiring.GetWire(i,j);
-					if(pin == PinWire.A)
-						this.network[j].A(input[i]);
-					else if(pin == PinWire.B)
-						this.network[j].B(input[i]);
-					else if(pin == PinWire.Both)
-					{
-						this.network[j].A(input[i]);
-						this.network[j].B(input[i]);
-					}
-				}
-			}
+			Console.WriteLine ("input");
+			DoInput(input);
+				
+			DoWire(false);
 			
-			// wiring 
-			for(int i=this.wiring.Input; i<this.wiring.Gates-this.wiring.Output; i++)
-				for(int j=0; j<this.wiring.Gates; j++)
-				{
-					PinWire pin = this.wiring.GetWire(i,j);
-					if(pin != PinWire.None)
-						this.network[i].Out -= Connect(j,pin);
-				}
-			
-			for(int i=0; i<this.wiring.Output; i++)
-			{
-				this.network[this.wiring.Gates-i-1].Out -= CreatePin(result,i);
-			}
+			DoOutput(false,result);
 			
 			return result;
 		}
 		
+		private void DoWire(bool connecting)
+		{
+			Console.WriteLine ("DoWire");
+			for(int i=0; i<this.wiring.Gates-this.wiring.Output; i++)
+			{
+				for(int j=0; j<this.wiring.Gates; j++)
+				{
+					PinWire pin = this.wiring.GetWire(i,j);
+					if(pin != PinWire.None)
+					{
+						IFlowGate gate = this.network[i];
+						Action<bool> pinAction = Connect(j,pin);
+						
+						if(connecting)
+							gate.Out += pinAction;
+						else
+							gate.Out -= pinAction;
+					}
+				}
+			}
+		}
+		
+		private void DoOutput(bool connecting, BitArray result)
+		{
+			for(int i=0; i<this.wiring.Output; i++)
+			{
+				IFlowGate gate = this.network[this.wiring.Gates-i-1];
+				Action<bool> pinAction = CreatePin(result,i);
+				if(connecting)
+					gate.Out += pinAction;
+				else
+					gate.Out -= pinAction;
+			}
+		}	
+		
+		private void DoInput(BitArray input)
+		{
+			for(int i=0; i<this.wiring.Input; i++)
+			{
+				for(int j=0; j<this.wiring.Gates; j++)
+				{
+					PinWire pin = this.wiring.GetInWire(i,j);
+					if(pin!=PinWire.None)
+						Console.WriteLine("[in]{0},{1} => {2}", i,j, pin);
+			
+					IFlowGate gate = this.network[i];
+						
+					if(pin == PinWire.A)
+						gate.A(input[j]);
+					else if(pin == PinWire.B)
+						gate.B(input[j]);
+					else if(pin == PinWire.Both)
+					{
+						gate.A(input[j]);
+						gate.B(input[j]);
+					}
+				}
+			}
+		}
+		
+		
 		private Action<bool> CreatePin(BitArray output, int port)
 		{
-			return signal => output.Set(port,signal);
+			return signal => 
+			{
+				output.Set(port,signal);
+			};
 		}
 		
 		private Action<bool> Connect(int src, PinWire pin)
 		{
-			
 			return (s) => 
 			{
 				if(pin == PinWire.A)

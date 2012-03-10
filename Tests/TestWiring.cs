@@ -60,12 +60,12 @@ namespace Tests
 				"11 00 00\n"+
 				"00 00 10\n";
 			
-			wiring.Wire(true,0,0,PinWire.A);
-			wiring.Wire(true,0,1,PinWire.B);
-			wiring.Wire(true,1,2,PinWire.Both);
+			wiring.InWire(0,0,PinWire.A);
+			wiring.InWire(0,1,PinWire.B);
+			wiring.InWire(1,2,PinWire.Both);
 			
-			wiring.Wire(false,0,0,PinWire.Both);
-			wiring.Wire(false,1,2,PinWire.A);
+			wiring.Wire(0,0,PinWire.Both);
+			wiring.Wire(1,2,PinWire.A);
 			
 			Assert.AreEqual(expected,wiring.ToString());
 		}

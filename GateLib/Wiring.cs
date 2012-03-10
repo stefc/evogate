@@ -36,48 +36,74 @@ namespace stefc.gatelib
 		public int Gates
 		{ get { return gates; }}
 		
-		public PinWire GetWire(int src, int dest)
-		{
-			int cols = gates * 2;
-			int ofs = (src * cols) + (dest*2);
-			if (wiring[ofs] && wiring[ofs+1])
-				return PinWire.Both;
-			else if(wiring[ofs])
-				return PinWire.A;
-			else if (wiring[ofs+1])
-				return PinWire.B;
-			return PinWire.None;
-		}			
 		
-		public void Wire(bool isInput, int src, int dest, PinWire wire)
+		private int CalcOfs(bool isInput, int src, int dest)
 		{
-			int cols = gates * 2;
-			int ofs = (((isInput ? 0 : input) + src) * cols) + (dest*2); 
-			if(wire == PinWire.A)
+			return (((isInput ? 0 : input) + src) * (gates*2)) + (dest*2); 
+		}
+		
+		private PinWire this[int ofs]
+		{
+			get 
 			{
-				wiring[ofs]=true;
+				if (wiring[ofs] && wiring[ofs+1])
+					return PinWire.Both;
+				else if(wiring[ofs])
+					return PinWire.A;
+				else if (wiring[ofs+1])
+					return PinWire.B;
+				return PinWire.None;
 			}
-			else if(wire== PinWire.B)
+			set 
 			{
-				wiring[ofs+1]=true;
-			}
-			else if(wire== PinWire.Both)
-			{
-				wiring[ofs]=true;
-				wiring[ofs+1]=true;
+				bool a=false;
+				bool b=false;
+				
+				if(value == PinWire.A)
+				{
+					a=true;
+				}
+				else if(value== PinWire.B)
+				{
+					b=true;
+				}
+				else if(value== PinWire.Both)
+				{
+					a=true;
+					b=true;
+				}
+				wiring[ofs]=a;
+				wiring[ofs+1]=b;
 			}
 		}
 		
 		public void Wire(int src, int dest, PinWire wire)
 		{
-			this.Wire(false,src,dest,wire);
+			int ofs = CalcOfs(false,src,dest);
+			Console.WriteLine ("Wire({2},{3}) ofs={0} => {1}",ofs,wire,src,dest);
+			this[ofs]=wire;
 		}
 		
 		public void InWire(int src, int dest, PinWire wire)
 		{
-			this.Wire(true,src,dest,wire);
+			int ofs = CalcOfs(true,src,dest);
+			Console.WriteLine ("InWire({2},{3}) ofs={0} => {1}",ofs,wire,src,dest);
+			this[ofs]=wire;
 		}
 		
+		public PinWire GetWire(int src, int dest)
+		{
+			int ofs = CalcOfs(false,src,dest);
+			Console.WriteLine ("GetWire({2},{3}) ofs={0} => {1}",ofs,this[ofs],src,dest);
+			return this[ofs];
+		}	
+		
+		public PinWire GetInWire(int src, int dest)
+		{
+			int ofs = CalcOfs(true,src,dest);
+			Console.WriteLine ("GetInWire({2},{3}) ofs={0} => {1}",ofs,this[ofs],src,dest);
+			return this[ofs];
+		}
 		
 		public override string ToString ()
 		{
