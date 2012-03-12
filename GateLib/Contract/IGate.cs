@@ -9,6 +9,7 @@ namespace stefc.gatelib.contract
 	
 	public interface IFlowGate
 	{
+		void Reset();
 		event Action<bool> Out;
 		void A(bool input);
         void B(bool input);

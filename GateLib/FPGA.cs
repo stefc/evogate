@@ -17,12 +17,16 @@ namespace stefc.gatelib
 			this.network = new List<IFlowGate>(wiring.Gates);
 			for(int i=0; i<wiring.Gates; i++)
 				this.network.Add(new NandGate());
-			
 		}
 		
 		public BitArray Output(BitArray input)
-		{
+		{			
 			BitArray result = new BitArray(this.wiring.Output);
+			
+			// empty signals on gates
+			foreach(IFlowGate gate in this.network)
+				gate.Reset();
+			
 			DoOutput(true, result);
 			
 			// wiring
@@ -85,16 +89,16 @@ namespace stefc.gatelib
 					if(pin!=PinWire.None)
 						Console.WriteLine("[in]{0},{1} => {2}", i,j, pin);
 			
-					IFlowGate gate = this.network[i];
+					IFlowGate gate = this.network[j];
 						
 					if(pin == PinWire.A)
-						gate.A(input[j]);
+						gate.A(input[i]);
 					else if(pin == PinWire.B)
-						gate.B(input[j]);
+						gate.B(input[i]);
 					else if(pin == PinWire.Both)
 					{
-						gate.A(input[j]);
-						gate.B(input[j]);
+						gate.A(input[i]);
+						gate.B(input[i]);
 					}
 				}
 			}

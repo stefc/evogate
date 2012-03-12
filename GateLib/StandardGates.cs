@@ -10,13 +10,18 @@ namespace stefc.gatelib
         
 		public Gate()
 		{
-			a=b=null;
+			Reset();
 		}
 		
 		public abstract bool Output(Tuple<bool,bool> input);	
 		
 		public event Action<bool> Out;
-
+		
+		public void Reset()
+		{
+			a=b=null;
+		}
+		
 		#region Input-Layer / Dendriten
         public void A(bool input) {
             a = input;

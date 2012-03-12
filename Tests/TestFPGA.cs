@@ -120,8 +120,9 @@ set 38,B
 			Wiring wiring = CreateXorGate();
 			// Console.WriteLine (wiring.ToString());
 			Assert.AreEqual(XOR_GATE, wiring.ToString());
+			
 			FPGA xorGate = new FPGA(wiring);
-		
+				
 			Func<bool,bool,bool> calc = (x,y) =>
 			{
 				BitArray result = xorGate.Output(CreateInput(x,y));
@@ -129,12 +130,10 @@ set 38,B
 				return result[0];
 			};
 			
-			//Assert.IsFalse(calc(false,false));
-			//Assert.IsFalse(calc(true,true));
-			Assert.IsTrue(calc(true,false));
-			//Assert.IsTrue(calc(false,true));
-			
-			
+			Assert.IsFalse(calc(false,false),	" 0 xor 0 = 0");
+			Assert.IsTrue(calc(false,true),		" 0 xor 1 = 1");
+			Assert.IsTrue(calc(true,false),		" 1 xor 0 = 1");
+			Assert.IsFalse(calc(true,true),		" 1 xor 1 = 0");
 		}
 		
 		private Wiring CreateXorGate()
