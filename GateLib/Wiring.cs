@@ -84,12 +84,6 @@ namespace stefc.gatelib
 			this[ofs]=wire;
 		}
 		
-		public void InWire(int src, int dest, PinWire wire)
-		{
-			int ofs = CalcOfs(true,src,dest);
-			Console.WriteLine ("InWire({2},{3}) ofs={0} => {1}",ofs,wire,src,dest);
-			this[ofs]=wire;
-		}
 		
 		public PinWire GetWire(int src, int dest)
 		{
@@ -98,12 +92,18 @@ namespace stefc.gatelib
 			return this[ofs];
 		}	
 		
-		public PinWire GetInWire(int src, int dest)
+		public PinWire this[bool isInput, int src, int dest]		
 		{
-			int ofs = CalcOfs(true,src,dest);
-			Console.WriteLine ("GetInWire({2},{3}) ofs={0} => {1}",ofs,this[ofs],src,dest);
-			return this[ofs];
-		}
+			get {
+				
+				int ofs = CalcOfs(isInput,src,dest);
+				return this[ofs];
+			}
+			set {
+				int ofs = CalcOfs(isInput,src,dest);
+				this[ofs]=value;	
+			}
+		}		
 		
 		public override string ToString ()
 		{

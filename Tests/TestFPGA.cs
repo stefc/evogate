@@ -150,10 +150,10 @@ set 38,B
 			
 			Console.WriteLine ("Start-Wiring");
 			
-			result.InWire(IN_A, GATE_1, PinWire.A);
-			result.InWire(IN_B,	GATE_1, PinWire.B);
-			result.InWire(IN_A, GATE_2, PinWire.A);
-			result.InWire(IN_B, GATE_3, PinWire.B);
+			result[true,IN_A, GATE_1] = PinWire.A;
+			result[true,IN_B,	GATE_1] = PinWire.B;
+			result[true,IN_A, GATE_2] = PinWire.A;
+			result[true,IN_B, GATE_3] = PinWire.B;
 			
 			result.Wire(GATE_1,  GATE_2, PinWire.B);
 			result.Wire(GATE_1,  GATE_3, PinWire.A);
@@ -190,25 +190,25 @@ set 38,B
 			
 			// 0 mit 56 nand verbinden
 			
-			result.InWire(IN_B,  GATE_1, PinWire.Both);
+			result[true,IN_B,  GATE_1] = PinWire.Both;
 			
-			result.InWire(IN_C,  GATE_2, PinWire.Both);
+			result[true,IN_C,  GATE_2] = PinWire.Both;
 			
-			result.InWire(IN_B,  GATE_3, PinWire.A);
-			result.InWire(IN_C,  GATE_3, PinWire.B);
+			result[true,IN_B,  GATE_3] = PinWire.A;
+			result[true,IN_C,  GATE_3] = PinWire.B;
 			
 			result.Wire(GATE_1,  GATE_4, PinWire.A);
 			result.Wire(GATE_2,  GATE_4, PinWire.B);
 			
-			result.InWire(IN_A,  GATE_5, PinWire.A);
+			result[true,IN_A,  GATE_5] = PinWire.A;
 			result.Wire(GATE_4,  GATE_5, PinWire.B);
 			
-			result.InWire(IN_A,  GATE_6, PinWire.Both);
+			result[true,IN_A,  GATE_6] = PinWire.Both;
 			
 			result.Wire(GATE_1,  GATE_7, PinWire.A);
-			result.InWire(IN_C,  GATE_7, PinWire.B);
+			result[true,IN_C,  GATE_7 ] = PinWire.B;
 			
-			result.InWire(IN_B,  GATE_8, PinWire.A);
+			result[true,IN_B,  GATE_8] = PinWire.A;
 			result.Wire(GATE_2,  GATE_8, PinWire.B);
 
 			result.Wire(GATE_4,  GATE_9, PinWire.A);
@@ -217,7 +217,7 @@ set 38,B
 			result.Wire(GATE_7, GATE_10, PinWire.A);
 			result.Wire(GATE_8, GATE_10, PinWire.B);
 			
-			result.InWire(IN_A, GATE_11, PinWire.A);
+			result[true,IN_A, GATE_11] = PinWire.A;
 			result.Wire(GATE_9, GATE_11, PinWire.B);
 			
 			result.Wire(GATE_6, GATE_12, PinWire.A);

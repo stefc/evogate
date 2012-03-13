@@ -60,9 +60,9 @@ namespace Tests
 				"11 00 00\n"+
 				"00 00 10\n";
 			
-			wiring.InWire(0,0,PinWire.A);
-			wiring.InWire(0,1,PinWire.B);
-			wiring.InWire(1,2,PinWire.Both);
+			wiring[true,0,0]=PinWire.A;
+			wiring[true,0,1]=PinWire.B;
+			wiring[true,1,2]=PinWire.Both;
 			
 			wiring.Wire(0,0,PinWire.Both);
 			wiring.Wire(1,2,PinWire.A);

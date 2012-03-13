@@ -32,9 +32,7 @@ namespace stefc.gatelib
 			// wiring
 			DoWire(true);
 			
-			
 			// input 
-			Console.WriteLine ("input");
 			DoInput(input);
 				
 			DoWire(false);
@@ -46,7 +44,6 @@ namespace stefc.gatelib
 		
 		private void DoWire(bool connecting)
 		{
-			Console.WriteLine ("DoWire");
 			for(int i=0; i<this.wiring.Gates-this.wiring.Output; i++)
 			{
 				for(int j=0; j<this.wiring.Gates; j++)
@@ -85,21 +82,10 @@ namespace stefc.gatelib
 			{
 				for(int j=0; j<this.wiring.Gates; j++)
 				{
-					PinWire pin = this.wiring.GetInWire(i,j);
-					if(pin!=PinWire.None)
-						Console.WriteLine("[in]{0},{1} => {2}", i,j, pin);
-			
-					IFlowGate gate = this.network[j];
-						
-					if(pin == PinWire.A)
-						gate.A(input[i]);
-					else if(pin == PinWire.B)
-						gate.B(input[i]);
-					else if(pin == PinWire.Both)
-					{
-						gate.A(input[i]);
-						gate.B(input[i]);
-					}
+					PinWire pin = this.wiring[true,i,j];
+					
+					IFlowGate dest = this.network[j];
+					Signal(dest,pin,input[i]);	
 				}
 			}
 		}
@@ -117,16 +103,21 @@ namespace stefc.gatelib
 		{
 			return (s) => 
 			{
-				if(pin == PinWire.A)
-					this.network[src].A(s);
-				else if(pin == PinWire.B)
-					this.network[src].B(s);
-				else if(pin == PinWire.Both)
-				{
-					this.network[src].A(s);
-					this.network[src].B(s);
-				}
+				Signal(this.network[src],pin,s);
 			};
+		}
+		
+		private void Signal(IFlowGate gate, PinWire pin, bool s)
+		{
+			if(pin == PinWire.A)
+				gate.A(s);
+			else if(pin == PinWire.B)
+				gate.B(s);
+			else if(pin == PinWire.Both)
+			{
+				gate.A(s);
+				gate.B(s);
+			}
 		}
 	}
 }
