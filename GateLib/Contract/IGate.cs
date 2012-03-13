@@ -13,6 +13,8 @@ namespace stefc.gatelib.contract
 		event Action<bool> Out;
 		void A(bool input);
         void B(bool input);
+			
+		void Signal(PinWire pin, bool signal);
 	}
 }
 

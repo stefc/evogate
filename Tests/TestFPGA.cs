@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using NUnit.Framework;
 using stefc.gatelib;
+using stefc.gatelib.contract;
 
 namespace Tests
 {
@@ -79,7 +80,7 @@ set 38,B
 11,10 => B
 
 */
-		[Test,Ignore]
+		[Test]
 		public void TestSimple1BitAdder()
 		{
 			
@@ -87,13 +88,6 @@ set 38,B
 			// muss identisch zu einzelnen NAND Gate sein 
 		
 			Wiring wiring = Create1BitAdder();
-			
-			
-			Assert.AreEqual(PinWire.A, wiring.GetWire(0,4));
-			Assert.AreEqual(PinWire.Both, wiring.GetWire(0,5));
-			Assert.AreEqual(PinWire.A, wiring.GetWire(0,10));
-			Assert.AreEqual(PinWire.None, wiring.GetWire(0,11));
-			//	Console.WriteLine(singleNand);
 			
 			Assert.AreEqual(ONE_BIT_ADDER, wiring.ToString());		
 			
@@ -112,13 +106,32 @@ set 38,B
 			Assert.AreEqual(2,result.Length);
 			Assert.IsTrue(result[0]);
 			Assert.IsFalse(result[1]);
+			
+			Check(oneBitAdder, "000", "00");
+			Check(oneBitAdder, "001", "01");
+			Check(oneBitAdder, "010", "01");
+			Check(oneBitAdder, "011", "10");
+			Check(oneBitAdder, "100", "01");
+			Check(oneBitAdder, "101", "10");
+			Check(oneBitAdder, "110", "10");
+			Check(oneBitAdder, "111", "11");
+		/*	
+			Check(oneBitAdder, 0, 0);
+			Check(oneBitAdder, 1, 1);
+			Check(oneBitAdder, 2, 1);
+			Check(oneBitAdder, 3, 2);
+			Check(oneBitAdder, 4, 1);
+			Check(oneBitAdder, 5, 2);
+			Check(oneBitAdder, 6, 2);
+			Check(oneBitAdder, 7, 3);
+	*/
+	
 		}
 		
 		[Test]
 		public void TestXorGate()
 		{
 			Wiring wiring = CreateXorGate();
-			// Console.WriteLine (wiring.ToString());
 			Assert.AreEqual(XOR_GATE, wiring.ToString());
 			
 			FPGA xorGate = new FPGA(wiring);
@@ -130,10 +143,10 @@ set 38,B
 				return result[0];
 			};
 			
-			Assert.IsFalse(calc(false,false),	" 0 xor 0 = 0");
-			Assert.IsTrue(calc(false,true),		" 0 xor 1 = 1");
-			Assert.IsTrue(calc(true,false),		" 1 xor 0 = 1");
-			Assert.IsFalse(calc(true,true),		" 1 xor 1 = 0");
+			Assert.IsFalse(calc(false,false)," 0 xor 0 = 0");
+			Assert.IsTrue(calc(false,true)," 0 xor 1 = 1");
+			Assert.IsTrue(calc(true,false)," 1 xor 0 = 1");
+			Assert.IsFalse(calc(true,true)," 1 xor 1 = 0");
 		}
 		
 		private Wiring CreateXorGate()
@@ -148,19 +161,16 @@ set 38,B
 			const int GATE_3 = 2;
 			const int GATE_4 = 3;
 			
-			Console.WriteLine ("Start-Wiring");
-			
 			result[true,IN_A, GATE_1] = PinWire.A;
-			result[true,IN_B,	GATE_1] = PinWire.B;
+			result[true,IN_B, GATE_1] = PinWire.B;
 			result[true,IN_A, GATE_2] = PinWire.A;
 			result[true,IN_B, GATE_3] = PinWire.B;
 			
-			result.Wire(GATE_1,  GATE_2, PinWire.B);
-			result.Wire(GATE_1,  GATE_3, PinWire.A);
+			result[false,GATE_1,  GATE_2] = PinWire.B;
+			result[false,GATE_1,  GATE_3] = PinWire.A;
 			
-			result.Wire(GATE_2,  GATE_4, PinWire.A);
-			result.Wire(GATE_3,  GATE_4, PinWire.B);
-			Console.WriteLine ("End-Wiring");
+			result[false,GATE_2,  GATE_4] = PinWire.A;
+			result[false,GATE_3,  GATE_4] = PinWire.B;
 			
 			return result;
 		}
@@ -190,44 +200,44 @@ set 38,B
 			
 			// 0 mit 56 nand verbinden
 			
-			result[true,IN_B,  GATE_1] = PinWire.Both;
+			result[true, IN_B,   GATE_1] = PinWire.Both;
 			
-			result[true,IN_C,  GATE_2] = PinWire.Both;
+			result[true, IN_C,   GATE_2] = PinWire.Both;
 			
-			result[true,IN_B,  GATE_3] = PinWire.A;
-			result[true,IN_C,  GATE_3] = PinWire.B;
+			result[true, IN_B,   GATE_3] = PinWire.A;
+			result[true, IN_C,   GATE_3] = PinWire.B;
 			
-			result.Wire(GATE_1,  GATE_4, PinWire.A);
-			result.Wire(GATE_2,  GATE_4, PinWire.B);
+			result[false,GATE_1, GATE_4] = PinWire.A;
+			result[false,GATE_2, GATE_4] = PinWire.B;
 			
-			result[true,IN_A,  GATE_5] = PinWire.A;
-			result.Wire(GATE_4,  GATE_5, PinWire.B);
+			result[true, IN_A,  GATE_5] = PinWire.A;
+			result[false,GATE_4, GATE_5] = PinWire.B;
 			
-			result[true,IN_A,  GATE_6] = PinWire.Both;
+			result[true, IN_A,  GATE_6] = PinWire.Both;
 			
-			result.Wire(GATE_1,  GATE_7, PinWire.A);
-			result[true,IN_C,  GATE_7 ] = PinWire.B;
+			result[false,GATE_1,  GATE_7] = PinWire.A;
+			result[true, IN_C,  GATE_7 ] = PinWire.B;
 			
-			result[true,IN_B,  GATE_8] = PinWire.A;
-			result.Wire(GATE_2,  GATE_8, PinWire.B);
+			result[true, IN_B,  GATE_8] = PinWire.A;
+			result[false,GATE_2,  GATE_8] = PinWire.B;
 
-			result.Wire(GATE_4,  GATE_9, PinWire.A);
-			result.Wire(GATE_3,  GATE_9, PinWire.B);
+			result[false,GATE_4,  GATE_9] = PinWire.A;
+			result[false,GATE_3,  GATE_9] = PinWire.B;
 			
-			result.Wire(GATE_7, GATE_10, PinWire.A);
-			result.Wire(GATE_8, GATE_10, PinWire.B);
+			result[false,GATE_7, GATE_10] = PinWire.A;
+			result[false,GATE_8, GATE_10] = PinWire.B;
 			
-			result[true,IN_A, GATE_11] = PinWire.A;
-			result.Wire(GATE_9, GATE_11, PinWire.B);
+			result[true, IN_A, GATE_11] = PinWire.A;
+			result[false,GATE_9, GATE_11] = PinWire.B;
 			
-			result.Wire(GATE_6, GATE_12, PinWire.A);
-			result.Wire(GATE_10, GATE_12, PinWire.B);
+			result[false,GATE_6, GATE_12] = PinWire.A;
+			result[false,GATE_10, GATE_12] = PinWire.B;
 
-			result.Wire(GATE_3, GATE_13, PinWire.A);
-			result.Wire(GATE_5, GATE_13, PinWire.B);
+			result[false,GATE_3, GATE_13] = PinWire.A;
+			result[false,GATE_5, GATE_13] = PinWire.B;
 
-			result.Wire(GATE_12, GATE_14, PinWire.A); 
-			result.Wire(GATE_11, GATE_14, PinWire.B);
+			result[false,GATE_12, GATE_14] = PinWire.A; 
+			result[false,GATE_11, GATE_14] = PinWire.B;
 			
 			return result;
 		}
@@ -242,6 +252,24 @@ set 38,B
 			return new BitArray(new bool[]{A,B});
 		}
 		
+		
+		
+		private void Check(IFieldProgrammableGateArray fpga, BitArray input, BitArray output)
+		{
+			BitArray result = fpga.Output(input);
+			
+			Assert.AreEqual(output, result, 
+				String.Format("{0} input => {1} expected, {2} result",
+			    	BitUtility.BitsToString(input),BitUtility.BitsToString(output),BitUtility.BitsToString(result)) );
+		}
+		
+		
+		
+		private void Check(IFieldProgrammableGateArray fpga, string input, string output)
+		{
+			Check(fpga, BitUtility.StringToBits(input), BitUtility.StringToBits(output));
+		}
+				
 		
 	
 	}

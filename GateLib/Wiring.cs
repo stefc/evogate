@@ -77,6 +77,7 @@ namespace stefc.gatelib
 			}
 		}
 		
+		/*
 		public void Wire(int src, int dest, PinWire wire)
 		{
 			int ofs = CalcOfs(false,src,dest);
@@ -90,7 +91,7 @@ namespace stefc.gatelib
 			int ofs = CalcOfs(false,src,dest);
 			Console.WriteLine ("GetWire({2},{3}) ofs={0} => {1}",ofs,this[ofs],src,dest);
 			return this[ofs];
-		}	
+		}	*/
 		
 		public PinWire this[bool isInput, int src, int dest]		
 		{

@@ -64,8 +64,8 @@ namespace Tests
 			wiring[true,0,1]=PinWire.B;
 			wiring[true,1,2]=PinWire.Both;
 			
-			wiring.Wire(0,0,PinWire.Both);
-			wiring.Wire(1,2,PinWire.A);
+			wiring[false,0,0]=PinWire.Both;
+			wiring[false,1,2]=PinWire.A;
 			
 			Assert.AreEqual(expected,wiring.ToString());
 		}

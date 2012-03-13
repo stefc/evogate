@@ -32,6 +32,20 @@ namespace stefc.gatelib
             b = input;
 			FireEvent();
         }
+			
+		public void Signal(PinWire pin, bool signal)
+		{
+			if(pin == PinWire.A)
+				A(signal);
+			else if(pin == PinWire.B)
+				B(signal);
+			else if(pin == PinWire.Both)
+			{
+				A(signal);
+				B(signal);
+			}
+		}
+		
 		#endregion
 		
 		#region Output-Layer / Synapse 
