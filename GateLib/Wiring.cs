@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Text;
 
 namespace stefc.gatelib
 {
@@ -24,7 +25,9 @@ namespace stefc.gatelib
 			int rows = input+gates-output;
 			int cols = gates*2;
 			
-			this.wiring = new BitArray(rows*cols);
+			//int len = (input*gates)*2 + SumSub(gates)*2;
+			int len = rows * cols;
+			this.wiring = new BitArray(len);
 		}
 		
 		public int Input
@@ -36,10 +39,35 @@ namespace stefc.gatelib
 		public int Gates
 		{ get { return gates; }}
 		
-		
 		private int CalcOfs(bool isInput, int src, int dest)
 		{
-			return (((isInput ? 0 : input) + src) * (gates*2)) + (dest*2); 
+			return isInput ? CalcInputOfs(src,dest) : CalcHiddenOfs(src,dest); 
+		}
+		
+		private int CalcHiddenOfs(int src, int dest)
+		{
+			return CalcLineOfs(input) + CalcLineOfs(src) + CalcColOfs(dest);	
+		}
+		
+		private int CalcInputOfs(int src, int dest)
+		{
+			return CalcLineOfs(src) + CalcColOfs(dest);	
+		}
+		
+		private int CalcLineOfs(int src)
+		{
+			return src * (gates*2);
+		}
+		
+		private int CalcColOfs(int dest)
+		{
+			return dest*2;
+		}
+		
+		private int SumSub(int n)
+		{
+			if(n==0) return 0;
+			return n-1 + SumSub(n-1);
 		}
 		
 		private PinWire this[int ofs]
@@ -77,22 +105,6 @@ namespace stefc.gatelib
 			}
 		}
 		
-		/*
-		public void Wire(int src, int dest, PinWire wire)
-		{
-			int ofs = CalcOfs(false,src,dest);
-			Console.WriteLine ("Wire({2},{3}) ofs={0} => {1}",ofs,wire,src,dest);
-			this[ofs]=wire;
-		}
-		
-		
-		public PinWire GetWire(int src, int dest)
-		{
-			int ofs = CalcOfs(false,src,dest);
-			Console.WriteLine ("GetWire({2},{3}) ofs={0} => {1}",ofs,this[ofs],src,dest);
-			return this[ofs];
-		}	*/
-		
 		public PinWire this[bool isInput, int src, int dest]		
 		{
 			get {
@@ -108,11 +120,69 @@ namespace stefc.gatelib
 		
 		public override string ToString ()
 		{
-			return 
-				String.Format("{0}-{1}-{2}\n{3}",
-					input,output,gates,
-					BitUtility.BitsToString(wiring,gates*2, 2));
+			StringBuilder sb = new StringBuilder(String.Format("{0}-{1}-{2}",input,output,gates));
+			Action<char> emmit = ch => sb.Append(ch);
+			
+			emmit('\n');
+			GetFormattedInput(0,emmit);
+			emmit('\n');
+			GetFormattedHidden(0,emmit);
+			
+			return sb.ToString();
+		}
+		
+		private void GetFormattedInput(int row, Action<char> emmit)
+		{
+			if(row<input)
+			{
+				AddChar('\n',row,emmit);
+				AddChar(true,row,0,emmit);		
+				GetFormattedInput(row+1, emmit);
+			}
+		}
+		
+		private void GetFormattedHidden(int row, Action<char> emmit)
+		{
+			if(row<gates-output)
+			{
+				AddChar('\n',row,emmit);
+				AddChar('#',0,row+1,emmit);
+				AddChar(false,row,row+1,emmit);
+				GetFormattedHidden(row+1,emmit);
+			}
+		}
+
+		private void AddChar(bool isInput, int row, int col, Action<char> emmit)
+		{
+			if(col!=gates) 
+			{
+				AddChar(' ',col,emmit);
+				AddPin(this[isInput,row,col],emmit);
+				AddChar(isInput, row, col+1, emmit);
+			}
+		}
+
+		private void AddChar(char ch, int start, int end, Action<char> emmit)
+		{
+			if(start!=end)
+			{
+				AddChar(ch, start+1,end, emmit);
+				emmit('#');
+				AddChar(' ',start,emmit);
+			}
+		}
+
+		private void AddPin(PinWire pin, Action<char> emmit)
+		{
+			if(pin==PinWire.A) emmit('A');
+			else if(pin == PinWire.B) emmit('B');
+			else if(pin == PinWire.Both) emmit('*');
+			else emmit('-');
+		}
+
+		private void AddChar(char ch, int index, Action<char> emmit)
+		{
+			if(index!=0) emmit(ch);
 		}
 	}
 }
-
