@@ -130,6 +130,8 @@ set 38,B
 		public void TestXorGate()
 		{
 			Wiring wiring = CreateXorGate();
+			
+			
 			Assert.AreEqual(XOR_GATE, wiring.ToString());
 			
 			FPGA xorGate = new FPGA(wiring);
@@ -145,6 +147,36 @@ set 38,B
 			Assert.IsTrue(calc(false,true)," 0 xor 1 = 1");
 			Assert.IsTrue(calc(true,false)," 1 xor 0 = 1");
 			Assert.IsFalse(calc(true,true)," 1 xor 1 = 0");
+		}
+		
+		[Test]
+		public void TestXorGA()
+		{
+			Wiring wiring = CreateXorGateFromGA();
+			
+			Console.WriteLine (wiring.ToString());
+			
+			FPGA xorGate = new FPGA(wiring);
+				
+			Func<bool,bool,bool> calc = (x,y) =>
+			{
+				BitArray result = xorGate.Output(CreateInput(x,y));
+				Assert.AreEqual(1,result.Count);
+				return result[0];
+			};
+			
+			Assert.IsFalse(calc(false,false)," 0 xor 0 = 0");
+			Assert.IsTrue(calc(false,true)," 0 xor 1 = 1");
+			Assert.IsTrue(calc(true,false)," 1 xor 0 = 1");
+			Assert.IsFalse(calc(true,true)," 1 xor 1 = 0");
+					
+			/*
+* B - A
+A * B B
+# B - -
+# # A B
+# # # B 
+					*/
 		}
 		
 		private Wiring CreateXorGate()
@@ -168,6 +200,36 @@ set 38,B
 			result[false,GATE_1,  GATE_3] = PinWire.A;
 			
 			result[false,GATE_2,  GATE_4] = PinWire.A;
+			result[false,GATE_3,  GATE_4] = PinWire.B;
+			
+			return result;
+		}
+		
+		private Wiring CreateXorGateFromGA()
+		{
+			Wiring result = new Wiring(2,1,4);
+			
+			const int IN_A = 0;
+			const int IN_B = 1;
+			
+			const int GATE_1 = 0;
+			const int GATE_2 = 1;
+			const int GATE_3 = 2;
+			const int GATE_4 = 3;
+
+			result[true,IN_A, GATE_1] = PinWire.Both;
+			result[true,IN_A, GATE_2] = PinWire.B;
+			result[true,IN_A, GATE_4] = PinWire.A;
+			
+			result[true,IN_B, GATE_1] = PinWire.A;
+			result[true,IN_B, GATE_2] = PinWire.Both;
+			result[true,IN_B, GATE_3] = PinWire.B;
+			result[true,IN_B, GATE_4] = PinWire.B;
+			
+			
+			result[false,GATE_1,  GATE_2] = PinWire.B;
+			result[false,GATE_2,  GATE_3] = PinWire.A;
+			result[false,GATE_2,  GATE_4] = PinWire.B;
 			result[false,GATE_3,  GATE_4] = PinWire.B;
 			
 			return result;

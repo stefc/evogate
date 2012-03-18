@@ -46,7 +46,7 @@ namespace stefc.gatelib
 		{
 			for(int i=0; i<this.wiring.Gates-this.wiring.Output; i++)
 			{
-				for(int j=0; j<this.wiring.Gates; j++)
+				for(int j=i+1; j<this.wiring.Gates; j++)
 				{
 					PinWire pin = this.wiring[false,i,j];
 					if(pin != PinWire.None)
@@ -82,11 +82,11 @@ namespace stefc.gatelib
 			{
 				for(int j=0; j<this.wiring.Gates; j++)
 				{
-					this.network[j].Signal(this.wiring[true,i,j],input[i]);	
+					PinWire pin = this.wiring[true,i,j];
+					this.network[j].Signal(pin,input[i]);
 				}
 			}
 		}
-		
 		
 		private Action<bool> CreatePin(BitArray output, int port)
 		{

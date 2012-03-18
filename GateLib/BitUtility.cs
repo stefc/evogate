@@ -14,6 +14,7 @@ namespace stefc.gatelib
 				result += (bits[i] ? "1":"0");
 			return result;
 		}
+		
 		public static string BitsToString(BitArray bits, int linebreak, int separator)
 		{
 			string result=String.Empty;

@@ -12,7 +12,12 @@ namespace stefc.gatelib
 		
 		private readonly BitArray wiring;
 		
-		public Wiring (int input, int output, int gates)
+		public Wiring (int input, int output, int gates) : this(input,output,gates, CreateEmptyWiring(input,output,gates))
+		{
+		}
+		
+	
+		public Wiring (int input, int output, int gates, BitArray wiring)
 		{
 			if(input<=0) throw new ArgumentException("input");
 			if(output<=0) throw new ArgumentException("output");
@@ -21,13 +26,7 @@ namespace stefc.gatelib
 			this.input=input;
 			this.output=output;
 			this.gates=gates;
-			
-			int rows = input+gates-output;
-			int cols = gates*2;
-			
-			//int len = (input*gates)*2 + SumSub(gates)*2;
-			int len = rows * cols;
-			this.wiring = new BitArray(len);
+			this.wiring=wiring;
 		}
 		
 		public int Input
@@ -46,7 +45,11 @@ namespace stefc.gatelib
 		
 		private int CalcHiddenOfs(int src, int dest)
 		{
-			return CalcLineOfs(input) + CalcLineOfs(src) + CalcColOfs(dest);	
+			return 
+				CalcLineOfs(input) + 
+				(gates * 3) +
+				(CalcHiddenLineOfs(gates-1,src)*2)+ 
+				CalcColOfs(dest-src-1);
 		}
 		
 		private int CalcInputOfs(int src, int dest)
@@ -59,12 +62,18 @@ namespace stefc.gatelib
 			return src * (gates*2);
 		}
 		
+		private int CalcHiddenLineOfs(int gates, int index)
+		{
+			if(index==0) return 0;
+			return gates + CalcHiddenLineOfs(gates-1,index-1);
+		}
+		
 		private int CalcColOfs(int dest)
 		{
 			return dest*2;
 		}
 		
-		private int SumSub(int n)
+		private static int SumSub(int n)
 		{
 			if(n==0) return 0;
 			return n-1 + SumSub(n-1);
@@ -184,5 +193,19 @@ namespace stefc.gatelib
 		{
 			if(index!=0) emmit(ch);
 		}
+		
+		private static BitArray CreateEmptyWiring(int input, int output, int gates)
+		{
+			return new BitArray(CalcLength(input,output,gates));
+		}
+		
+		public static int CalcLength(int input, int output, int gates)
+		{
+			return 
+				(input*gates)*2 + 
+				(gates * 3) +
+				SumSub(gates)*2;
+		}
+		
 	}
 }
