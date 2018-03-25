@@ -1,134 +1,102 @@
+
 using System;
-using NUnit.Framework;
+using System.Collections;
+using System.Linq;
+
+using Xunit;
+using FakeItEasy;
+
 using stefc.gatelib;
-using stefc.gatelib.contract;
 
-namespace Tests
+namespace tests
 {
-	[TestFixture]
-	public class TestGates
-	{
-		[Test]	
-		public void TestFlowGates()
-		{
-			this.CheckGate((IFlowGate)new AndGate(), new bool[]{false, false, false, true});
-			this.CheckGate((IFlowGate)new OrGate(), new bool[]{false, true, true, true});
-			this.CheckGate((IFlowGate)new NandGate(), new bool[]{true, true, true, false});
-			this.CheckGate((IFlowGate)new NorGate(), new bool[]{true, false, false, false});
-			this.CheckGate((IFlowGate)new XorGate(), new bool[]{false, true, true, false});
-			this.CheckGate((IFlowGate)new XnorGate(), new bool[]{true, false, false, true});
-		}
-		
-		[Test]
-		public void TestStandardGates()
-		{
-			this.CheckGate((IGate)new AndGate(), new bool[]{false, false, false, true});
-			this.CheckGate((IGate)new OrGate(), new bool[]{false, true, true, true});
-			this.CheckGate((IGate)new NandGate(), new bool[]{true, true, true, false});
-			this.CheckGate((IGate)new NorGate(), new bool[]{true, false, false, false});
-			this.CheckGate((IGate)new XorGate(), new bool[]{false, true, true, false});
-			this.CheckGate((IGate)new XnorGate(), new bool[]{true, false, false, true});
-		}
-		
-		private void CheckGate(IGate gate, bool[] results)
-		{
-			this.CheckGate(gate, false, false, results[0]); 			
-			this.CheckGate(gate, false, true,  results[1]);	
-			this.CheckGate(gate, true,  false, results[2]);
-			this.CheckGate(gate, true,  true,  results[3]);
-		}
-		
-		private void CheckGate(IFlowGate gate, bool[] results)
-		{
-			this.CheckGate(gate, false, false, results[0]); 			
-			this.CheckGate(gate, false, true,  results[1]);	
-			this.CheckGate(gate, true,  false, results[2]);
-			this.CheckGate(gate, true,  true,  results[3]);
-		}
-		
-		private void CheckGate(IGate gate, bool x,bool y, bool q)
-		{
-			Assert.AreEqual(q, gate.Output(new Tuple<bool,bool>(x,y)));
-		}
-		
-		private void CheckGate(IFlowGate gate, bool x, bool y, bool q)
-		{
-			bool wasFired = false;
-			Action<bool> action = (signal) => {
-				Assert.AreEqual(q, signal);	
-				wasFired=true;
-			};
-			
-			gate.Out += action;
-			
-			gate.A(x);
-			gate.B(y);
-			
-			gate.Out -= action;
-			
-			Assert.IsTrue(wasFired,"No fired!");
-		}	
-		
-		[Test]
-		public void TestFullAdder()
-		{
-			IFullAdder adder = new FullAdder();
-			//          	x		y		cIn		cOut	s			
-			CheckGate(adder,	false,	false,	false,	false,	false);
-			CheckGate(adder,	false,	false,	true,	false,	true);
-			CheckGate(adder,	false,	true,	false,	false,	true);
-			CheckGate(adder,	false,	true,	true,	true,	false);
-			CheckGate(adder,	true,	false,	false,	false,	true);
-			CheckGate(adder,	true,	false,	true,	true,	false);
-			CheckGate(adder,	true,	true,	false,	true,	false);
-			CheckGate(adder, 	true, 	true, 	true, 	true,	true);
-		}
-		
-		private void CheckGate(IFullAdder gate, bool x,bool y, bool cIn, bool cOut, bool s)
-		{
-			Assert.AreEqual(new Tuple<bool,bool>(s,cOut), gate.Output(new Tuple<bool,bool,bool>(x,y,cIn)));
-		}
-		
-		[Test]
-		public void TestQuadAdder()
-		{
-			IQuadAdder adder = new QuadAdder();
-			Assert.IsNotNull(adder);
-			
-			// ohne carry in (cIn)
-			this.DoLoop(adder,false);
-			
-			// mit carry in (cIn) 
-			this.DoLoop(adder,true);			
-		}
-		
-		private void DoLoop(IQuadAdder adder,bool cIn)
-		{
-			// ohne carry in (cIn)
-			for(byte x = 0; x<16; x++)
-				for(byte y= 0; y<16; y++)
-				{
-					byte result = (byte)(x + y + (cIn ? 1:0 ));
-					bool cOut = (result & 0x10) > 0;
-					result &= 0x0F;
-			
-					Check(adder, x,y,cIn,cOut,result);
-					Check(adder, y,x,cIn,cOut,result);
-				}
-		}
-		
-		private void Check(IQuadAdder adder,byte x,byte y, bool cIn, bool cOut, byte s)
-		{
-			string message = String.Format("(x={0},y={1},cIn={2}) => (cOut={3},s={4})",x,y,cIn,cOut,s);
-			
-			Tuple<byte,byte,bool> input = new Tuple<byte, byte, bool>(x,y,cIn);
-			Tuple<byte,bool> result = adder.Output(input);
-			
-			Assert.AreEqual(s,result.Item1, message);
-			Assert.AreEqual(cOut, result.Item2, message);
-			
-		}
-		
-	}
-}
+    public class TestGates
+    {
+        
+        private Gates _ = new Gates();
 
+        [Theory]
+        [InlineData(0,0,0)]
+        [InlineData(0,1,0)]
+        [InlineData(1,0,0)]
+        [InlineData(1,1,1)]
+        public void TestAnd(int a, int b, int y)
+        {
+            var onResult = A.Fake<Action<bool>>();
+
+            _.And(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+
+            A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(0,0,0)]
+        [InlineData(0,1,1)]
+        [InlineData(1,0,1)]
+        [InlineData(1,1,1)]
+        public void TestOr(int a, int b, int y)
+        {
+            var onResult = A.Fake<Action<bool>>();
+
+            _.Or(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+
+            A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(0,0,1)]
+        [InlineData(0,1,1)]
+        [InlineData(1,0,1)]
+        [InlineData(1,1,0)]
+        public void TestNand(int a, int b, int y)
+        {
+            var onResult = A.Fake<Action<bool>>();
+
+            _.Nand(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+
+            A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(0,0,1)]
+        [InlineData(0,1,0)]
+        [InlineData(1,0,0)]
+        [InlineData(1,1,0)]
+        public void TestNor(int a, int b, int y)
+        {
+            var onResult = A.Fake<Action<bool>>();
+
+            _.Nor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+
+            A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(0,0,0)]
+        [InlineData(0,1,1)]
+        [InlineData(1,0,1)]
+        [InlineData(1,1,0)]
+        public void TestXor(int a, int b, int y)
+        {
+            var onResult = A.Fake<Action<bool>>();
+
+            _.Xor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+
+            A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(0,0,1)]
+        [InlineData(0,1,0)]
+        [InlineData(1,0,0)]
+        [InlineData(1,1,1)]
+        public void TestXnor(int a, int b, int y)
+        {
+            var onResult = A.Fake<Action<bool>>();
+
+            _.Xnor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+
+            A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        }
+    }
+}
