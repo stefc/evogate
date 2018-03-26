@@ -1,42 +1,32 @@
 using System;
-using stefc.gatelib.contract;
+
 
 namespace stefc.gatelib
 {
-			
-	public class FullAdder : IFullAdder
-	{
-		private IGate xor1;
-		private IGate xor2;
-		private IGate and1;
-		private IGate and2;
-		private IGate or;
-		
-		public FullAdder()
-		{
-			xor1=new XorGate(); 
-			xor2=new XorGate();
-			and1=new AndGate();
-			and2=new AndGate();
-			or=new OrGate();
-		}
-		
-		public Tuple<bool,bool> Output(Tuple<bool,bool,bool> input)
-		{
-			Tuple<bool,bool> ab = new Tuple<bool,bool>(input.Item1,input.Item2);
-			bool a_xor_b = xor1.Output(ab);
-			bool a_and_b = and2.Output(ab);
-			
-			
-			Tuple<bool,bool> ab_c = new Tuple<bool,bool>(a_xor_b,input.Item3);
-			bool s = xor2.Output(ab_c);
-			bool ab_and_c = and1.Output(ab_c);
-			
-	
-			bool c = or.Output(new Tuple<bool,bool>(ab_and_c,a_and_b));
-			
-			return new Tuple<bool, bool>(s,c);
-		}
-	}
-}
+    public class FullAdder {
 
+
+        #region Integration
+
+        internal void Add(bool a,bool b, bool c, Action<bool> onSum, Action<bool> onCarry)
+        {
+            var gate = new Gates();
+
+            gate.Xor( a, b, 
+                xor1 => {
+                    gate.And( a, b, 
+                        and1 => {
+                            gate.Xor( xor1, c, 
+                                s => {
+                                    onSum(s);
+                                    gate.And( xor1, c, 
+                                        and2 => {
+                                           gate.Xor( and1, and2, onCarry);
+                                        });
+                                });
+                        });
+                });
+        }
+        #endregion
+    }   
+}
