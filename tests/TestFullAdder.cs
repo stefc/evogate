@@ -7,6 +7,7 @@ using Xunit;
 using FakeItEasy;
 
 using stefc.gatelib;
+using System.Threading.Tasks;
 
 namespace tests
 {
@@ -24,12 +25,12 @@ namespace tests
         [InlineData(true,	false,	true,	true,	false)]
         [InlineData(true,	true,	false,	true,	false)]
         [InlineData(true, 	true, 	true, 	true,	true)]
-        public void TestAdd(bool x, bool y, bool cIn, bool cOut, bool s)
+        public async void TestAdd(bool x, bool y, bool cIn, bool cOut, bool s)
         {
-            var onSum = A.Fake<Action<bool>>();
-            var onCarry = A.Fake<Action<bool>>();
+            var onSum = A.Fake<Func<bool,Task>>();
+            var onCarry = A.Fake<Func<bool,Task>>();
 
-            _.Add(x, y, cIn, onSum, onCarry);
+            await _.Add(x, y, cIn, onSum, onCarry);
 
             A.CallTo( () => onCarry.Invoke(cOut)).MustHaveHappened();
             A.CallTo( () => onSum.Invoke(s)).MustHaveHappened();

@@ -7,6 +7,7 @@ using Xunit;
 using FakeItEasy;
 
 using stefc.gatelib;
+using System.Threading.Tasks;
 
 namespace tests
 {
@@ -20,11 +21,11 @@ namespace tests
         [InlineData(0,1,0)]
         [InlineData(1,0,0)]
         [InlineData(1,1,1)]
-        public void TestAnd(int a, int b, int y)
+        public async void TestAnd(int a, int b, int y)
         {
-            var onResult = A.Fake<Action<bool>>();
+            var onResult = A.Fake<Func<bool,Task>>();
 
-            _.And(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+            await _.And(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
 
             A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
         }
@@ -34,11 +35,11 @@ namespace tests
         [InlineData(0,1,1)]
         [InlineData(1,0,1)]
         [InlineData(1,1,1)]
-        public void TestOr(int a, int b, int y)
+        public async void TestOr(int a, int b, int y)
         {
-            var onResult = A.Fake<Action<bool>>();
+            var onResult = A.Fake<Func<bool,Task>>();
 
-            _.Or(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+            await _.Or(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
 
             A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
         }
@@ -48,11 +49,11 @@ namespace tests
         [InlineData(0,1,1)]
         [InlineData(1,0,1)]
         [InlineData(1,1,0)]
-        public void TestNand(int a, int b, int y)
+        public async void TestNand(int a, int b, int y)
         {
-            var onResult = A.Fake<Action<bool>>();
+            var onResult = A.Fake<Func<bool,Task>>();
 
-            _.Nand(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+            await _.Nand(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
 
             A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
         }
@@ -62,11 +63,11 @@ namespace tests
         [InlineData(0,1,0)]
         [InlineData(1,0,0)]
         [InlineData(1,1,0)]
-        public void TestNor(int a, int b, int y)
+        public async void TestNor(int a, int b, int y)
         {
-            var onResult = A.Fake<Action<bool>>();
+            var onResult = A.Fake<Func<bool,Task>>();
 
-            _.Nor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+            await _.Nor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
 
             A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
         }
@@ -76,11 +77,11 @@ namespace tests
         [InlineData(0,1,1)]
         [InlineData(1,0,1)]
         [InlineData(1,1,0)]
-        public void TestXor(int a, int b, int y)
+        public async void TestXor(int a, int b, int y)
         {
-            var onResult = A.Fake<Action<bool>>();
+            var onResult = A.Fake<Func<bool,Task>>();
 
-            _.Xor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+            await _.Xor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
 
             A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
         }
@@ -90,11 +91,11 @@ namespace tests
         [InlineData(0,1,0)]
         [InlineData(1,0,0)]
         [InlineData(1,1,1)]
-        public void TestXnor(int a, int b, int y)
+        public async void TestXnor(int a, int b, int y)
         {
-            var onResult = A.Fake<Action<bool>>();
+            var onResult = A.Fake<Func<bool,Task>>();
 
-            _.Xnor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+            await _.Xnor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
 
             A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
         }

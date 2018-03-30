@@ -1,5 +1,5 @@
 using System;
-
+using System.Threading.Tasks;
 
 namespace stefc.gatelib
 {
@@ -7,35 +7,35 @@ namespace stefc.gatelib
 
         #region Operationen
 
-        internal void And(bool a,bool b, Action<bool> onResult)
+        internal async Task And(bool a,bool b, Func<bool,Task> onResult)
         {
-            onResult(a & b);
+            await onResult(a & b);
         }
 
-        internal void Or(bool a,bool b, Action<bool> onResult)
+        internal async Task Or(bool a,bool b, Func<bool,Task> onResult)
         {
-            onResult(a | b);
+            await onResult(a | b);
         }
 
-        internal void Nand(bool a,bool b, Action<bool> onResult)
+        internal async Task Nand(bool a,bool b, Func<bool,Task> onResult)
         {
-            onResult(!(a & b));
+            await onResult(!(a & b));
         }
 
-        internal void Nor(bool a,bool b, Action<bool> onResult)
+        internal async Task Nor(bool a,bool b, Func<bool,Task> onResult)
         {
-            onResult(!(a | b));
+            await onResult(!(a | b));
         }
 
 
-        internal void Xor(bool a,bool b, Action<bool> onResult)
+        internal async Task Xor(bool a,bool b, Func<bool,Task> onResult)
         {
-            onResult(a ^ b);
+            await onResult(a ^ b);
         }
 
-        internal void Xnor(bool a,bool b, Action<bool> onResult)
+        internal async Task Xnor(bool a,bool b, Func<bool,Task> onResult)
         {
-            onResult(!(a ^ b));
+            await onResult(!(a ^ b));
         }
 
         #endregion
