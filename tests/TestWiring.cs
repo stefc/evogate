@@ -20,7 +20,7 @@ namespace tests
 			
 			Wiring wiring = new Wiring(2,1,3);
 		
-			Assert.Equal(expected_2_1_3,wiring.ToString(), "2-1 (3)");
+			Assert.Equal(expected_2_1_3,wiring.ToString());
 				
 			string expected_3_2_4 =  // 5 rows
 				"3-2-4\n"+
@@ -31,7 +31,7 @@ namespace tests
 				"# # - -";
 			
 			wiring = new Wiring(3,2,4);
-			Assert.Equal(expected_3_2_4,wiring.ToString(), "3-2 (4)");
+			Assert.Equal(expected_3_2_4,wiring.ToString());
 			
 			string expected_4_3_7 =  // 6 rows 
 				"4-3-7\n"+
@@ -45,7 +45,7 @@ namespace tests
 				"# # # # - - -";
 			
 			wiring = new Wiring(4,3,7);
-			Assert.Equal(expected_4_3_7,wiring.ToString(), "4-3 (7)");
+			Assert.Equal(expected_4_3_7,wiring.ToString());
 		}
 		
 		[Fact]
@@ -75,7 +75,7 @@ namespace tests
 		{
 			Assert.Throws<ArgumentException>( () => new Wiring(0,1,1));
 			Assert.Throws<ArgumentException>( () => new Wiring(1,0,1));
-			Assert.Throws<ArgumentException>( () => new Wiring(1,1,0));		
+			Assert.Throws<ArgumentException>( () => new Wiring(1,1,0));
 		}
 		
 		[Fact]
