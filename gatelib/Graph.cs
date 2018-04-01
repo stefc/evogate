@@ -11,10 +11,10 @@ namespace stefc.gatelib
     public class Graph<T> : IEnumerable<T> 
         where T : IEquatable<T> 
     {
-        private readonly ImmutableHashSet<Node<T>> nodeSet;
+        private readonly ImmutableList<Node<T>> nodeSet;
 
-        public Graph() : this(ImmutableHashSet<Node<T>>.Empty) {}
-        public Graph(ImmutableHashSet<Node<T>> nodeSet) => this.nodeSet = nodeSet ?? ImmutableHashSet<Node<T>>.Empty;
+        public Graph() : this(ImmutableList<Node<T>>.Empty) {}
+        public Graph(ImmutableList<Node<T>> nodeSet) => this.nodeSet = nodeSet ?? ImmutableList<Node<T>>.Empty;
 
         // adds a node to the graph
          public Graph<T> AddNode(Node<T> node) => new Graph<T>(this.nodeSet.Add(node));
@@ -42,7 +42,7 @@ namespace stefc.gatelib
             return nodeSet.GetEnumerator();
         }
 
-        public ImmutableHashSet<Node<T>> Nodes => nodeSet;
+        public ImmutableList<Node<T>> Nodes => nodeSet;
 
         // public bool Remove(T value)
         // {

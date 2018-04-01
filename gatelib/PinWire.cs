@@ -18,7 +18,8 @@ namespace stefc.gatelib
 		Nor	 = 0b011,
 		Nand = 0b100,
 		Xor	 = 0b101,
-		Nxor = 0x110
+		Nxor = 0x110,
+        Not = 0x111
 	}
 }
 

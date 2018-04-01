@@ -7,6 +7,16 @@ namespace stefc.gatelib
 
         #region Operationen
 
+        internal async Task Not(bool a, Func<bool,Task> onResult)
+        {
+            await onResult(!a);
+        }
+
+        internal async Task Identity(bool a, Func<bool,Task> onResult)
+        {
+            await onResult(a);
+        }
+
         internal async Task And(bool a,bool b, Func<bool,Task> onResult)
         {
             await onResult(a & b);
