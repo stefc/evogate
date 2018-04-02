@@ -25,9 +25,16 @@ namespace stefc.gatelib
         public Graph<T> AddDirectedEdge(T from, T to)
         {
             var fromNode = nodeSet.First(x => x.Value.Equals(from));
-            var toNode = nodeSet.First(x => x.Value.Equals(to));
+            var toNode = nodeSet.First(x => x.Value.Equals(to)).Value;
 
-            return new Graph<T>(nodeSet.Remove(fromNode).Add(fromNode.AddNeighbor(toNode.Value)));
+            return new Graph<T>(nodeSet.Remove(fromNode).Add(fromNode.AddNeighbor(toNode)));
+        }
+        public Graph<T> AddDirectedEdges(T from, IEnumerable<T> to)
+        {
+            var fromNode = nodeSet.First(x => x.Value.Equals(from));
+            var toNodes = to.Select( t => nodeSet.First(x => x.Value.Equals(t)).Value);
+
+            return new Graph<T>(nodeSet.Remove(fromNode).Add(fromNode.AddNeighbors(toNodes)));
         }
 
         public bool Contains(T value) => nodeSet.FirstOrDefault(x => x.Value.Equals(value)) != null;
@@ -119,10 +126,10 @@ namespace stefc.gatelib
     {
         // Private member-variables
         private readonly T data;
-        private readonly ImmutableHashSet<T> neighbors = ImmutableHashSet<T>.Empty;
+        private readonly ImmutableList<T> neighbors = ImmutableList<T>.Empty;
 
-        public Node(T data) : this(data, ImmutableHashSet<T>.Empty) {}
-        public Node(T data, ImmutableHashSet<T> neighbors)
+        public Node(T data) : this(data, ImmutableList<T>.Empty) {}
+        public Node(T data, ImmutableList<T> neighbors)
         {
             this.data = data;
             this.neighbors = neighbors;
@@ -130,11 +137,14 @@ namespace stefc.gatelib
 
         public T Value => this.data;
 
-        public ImmutableHashSet<T> Neighbors => this.neighbors;
+        public ImmutableList<T> Neighbors => this.neighbors;
 
 
         public Node<T> AddNeighbor(T value) {
             return new Node<T>(this.data, this.neighbors.Add(value));
+        }
+        public Node<T> AddNeighbors(IEnumerable<T> values) {
+            return new Node<T>(this.data, this.neighbors.AddRange(values));
         }
     }
 }

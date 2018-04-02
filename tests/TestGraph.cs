@@ -33,9 +33,10 @@ namespace tests {
                 .AddDirectedEdge("Privacy.htm", "Index.htm")     // Privacy -> Index
                 .AddDirectedEdge("Privacy.htm", "About.htm")     // Privacy -> About
 
-                .AddDirectedEdge("About.htm", "Privacy.htm")     // About -> Privacy
-                .AddDirectedEdge("About.htm", "People.aspx")     // About -> People
-                .AddDirectedEdge("About.htm", "Contact.aspx")    // About -> Contact
+                .AddDirectedEdges("About.htm", new []
+                                                {"Privacy.htm",  // About -> Privacy
+                                                 "People.aspx",  // About -> People
+                                                "Contact.aspx"}) // About -> Contact
 
                 .AddDirectedEdge("Index.htm", "About.htm")       // Index -> About
                 .AddDirectedEdge("Index.htm", "Contact.aspx")    // Index -> Contacts

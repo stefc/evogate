@@ -15,5 +15,11 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
-  
+
+    <ItemGroup>
+        <Content Include="Fulladder.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    
 </Project>
