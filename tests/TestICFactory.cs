@@ -1,6 +1,4 @@
-using System;
 using Xunit;
-using FakeItEasy;
 using stefc.gatelib;
 using System.IO;
 using System.Text;
@@ -8,9 +6,11 @@ using System.Linq;
 
 namespace tests
 {
-	public class TestICFactory
+    public class TestICFactory
 	{
-		[Fact]
+        private static readonly string[] sourceArray = ["h1","h2","h2","i3"];
+
+        [Fact]
 		public void TestReadJson()
 		{
             string path = Directory.GetCurrentDirectory();
@@ -32,7 +32,7 @@ namespace tests
             var edges = gateA.Neighbors.Select( gate => gate.Id).OrderBy( id => id);
             
 
-            Assert.Equal(new[] { "h1","h2","h2","i3" }.OrderBy( id => id), edges);
+            Assert.Equal(sourceArray.OrderBy( id => id), edges);
 		}
 		
 	}

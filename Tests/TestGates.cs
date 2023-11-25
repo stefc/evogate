@@ -1,7 +1,5 @@
 
 using System;
-using System.Collections;
-using System.Linq;
 
 using Xunit;
 using FakeItEasy;
@@ -14,7 +12,7 @@ namespace tests
     public class TestGates
     {
         
-        private Gates _ = new Gates();
+        private Gates _ = new();
 
         [Theory]
         [InlineData(0,0,0)]

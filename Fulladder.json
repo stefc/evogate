@@ -5,12 +5,10 @@
     "gates"  : 14,
 
     "wiring" : [
-        // Input
         { "id": ":a",  "op": "None", "edges": ["h1","h2","h2","i3"] },
         { "id": ":b",  "op": "None", "edges": ["f1","f1","f3","h4"] },
         { "id": ":c",  "op": "None", "edges": ["f2","f2","f3","h3"] },
 
-        // Hidden Layers
         { "id": "f1", "op": "Nand", "edges": ["g1","h3"] },
         { "id": "f2", "op": "Nand", "edges": ["g1","h4"] },
         { "id": "f3", "op": "Nand", "edges": ["i1","h5"] },
@@ -25,7 +23,7 @@
         { "id": "i3", "op": "Nand", "edges": ["k1"] },
         { "id": "j1", "op": "Nand", "edges": ["k1"] },
         { "id": "k1", "op": "Nand", "edges": ["e:"] },
-        // Output
+        
         { "id": "d:",  "op": "None" },
         { "id": "e:",  "op": "None" }
     ]

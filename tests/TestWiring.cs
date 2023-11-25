@@ -90,10 +90,10 @@ namespace tests
 					
 			5 Gates, 2 output => 0,4,7 
 			*/ 		
-			Check( 4, new int[]{0,3,5});
-			Check( 5, new int[]{0,4,7,9});
-			Check( 6, new int[]{0,5,9,12,14});
-			Check( 5, new int[]{0,4,7});
+			Check( 4, [0,3,5]);
+			Check( 5, [0,4,7,9]);
+			Check( 6, [0,5,9,12,14]);
+			Check( 5, [0,4,7]);
 			
 			Assert.Equal(3+2+1, SumSub(4,1));
 			Assert.Equal(4+3+2+1, SumSub(5,1));
