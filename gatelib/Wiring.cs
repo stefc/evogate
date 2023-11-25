@@ -19,9 +19,9 @@ namespace stefc.gatelib
 	
 		public Wiring (int input, int output, int gates, BitArray wiring)
 		{
-			if(input<=0) throw new ArgumentException("input");
-			if(output<=0) throw new ArgumentException("output");
-			if(gates<=0) throw new ArgumentException("gates");
+			if(input<=0) throw new ArgumentException(null, nameof(input));
+			if(output<=0) throw new ArgumentException(null, nameof(output));
+			if(gates<=0) throw new ArgumentException(null, nameof(gates));
 			
 			this.input=input;
 			this.output=output;
@@ -129,10 +129,10 @@ namespace stefc.gatelib
 		
 		public override string ToString ()
 		{
-			StringBuilder sb = new StringBuilder(String.Format("{0}-{1}-{2}",input,output,gates));
-			Action<char> emmit = ch => sb.Append(ch);
-			
-			emmit('\n');
+			StringBuilder sb = new(String.Format("{0}-{1}-{2}",input,output,gates));
+            void emmit(char ch) => sb.Append(ch);
+
+            emmit('\n');
 			GetFormattedInput(0,emmit);
 			emmit('\n');
 			GetFormattedHidden(0,emmit);

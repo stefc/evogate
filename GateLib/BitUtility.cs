@@ -1,11 +1,10 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace stefc.gatelib
 {
-	public static class BitUtility
+    public static class BitUtility
 	{
 		public static string BitsToString(BitArray bits)
 		{
