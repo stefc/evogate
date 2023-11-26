@@ -15,86 +15,110 @@ public class TestGates
     private Gates _ = new();
 
     [Theory]
-    [InlineData(0,0,0)]
-    [InlineData(0,1,0)]
-    [InlineData(1,0,0)]
-    [InlineData(1,1,1)]
-    public async void TestAnd(int a, int b, int y)
+    [InlineData(0b000)] 
+    [InlineData(0b010)] 
+    [InlineData(0b100)] 
+    [InlineData(0b111)] 
+    public async void TestAnd(int bitPattern)
     {
+        var a = Convert.ToBoolean((bitPattern & 0b100) >> 2);
+        var b = Convert.ToBoolean((bitPattern & 0b010) >> 1);
+        var y = Convert.ToBoolean(bitPattern & 0b001);
+
         var onResult = A.Fake<Func<bool,Task>>();
 
-        await _.And(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+        await _.And(a, b, onResult);
 
-        A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        A.CallTo( () => onResult.Invoke(y)).MustHaveHappened();
     }
 
     [Theory]
-    [InlineData(0,0,0)]
-    [InlineData(0,1,1)]
-    [InlineData(1,0,1)]
-    [InlineData(1,1,1)]
-    public async void TestOr(int a, int b, int y)
+    [InlineData(0b000)] 
+    [InlineData(0b011)] 
+    [InlineData(0b101)] 
+    [InlineData(0b111)] 
+    public async void TestOr(int bitPattern)
     {
+        var a = Convert.ToBoolean((bitPattern & 0b100) >> 2);
+        var b = Convert.ToBoolean((bitPattern & 0b010) >> 1);
+        var y = Convert.ToBoolean(bitPattern & 0b001);
+
         var onResult = A.Fake<Func<bool,Task>>();
 
-        await _.Or(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+        await _.Or(a, b, onResult);
 
-        A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        A.CallTo( () => onResult.Invoke(y)).MustHaveHappened();
     }
 
     [Theory]
-    [InlineData(0,0,1)]
-    [InlineData(0,1,1)]
-    [InlineData(1,0,1)]
-    [InlineData(1,1,0)]
-    public async void TestNand(int a, int b, int y)
+    [InlineData(0b001)] 
+    [InlineData(0b011)] 
+    [InlineData(0b101)] 
+    [InlineData(0b110)] 
+    public async void TestNand(int bitPattern)
     {
+        var a = Convert.ToBoolean((bitPattern & 0b100) >> 2);
+        var b = Convert.ToBoolean((bitPattern & 0b010) >> 1);
+        var y = Convert.ToBoolean(bitPattern & 0b001);
+
         var onResult = A.Fake<Func<bool,Task>>();
 
-        await _.Nand(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+        await _.Nand(a, b, onResult);
 
-        A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        A.CallTo( () => onResult.Invoke(y)).MustHaveHappened();
     }
 
     [Theory]
-    [InlineData(0,0,1)]
-    [InlineData(0,1,0)]
-    [InlineData(1,0,0)]
-    [InlineData(1,1,0)]
-    public async void TestNor(int a, int b, int y)
+    [InlineData(0b001)] 
+    [InlineData(0b010)] 
+    [InlineData(0b100)] 
+    [InlineData(0b110)] 
+    public async void TestNor(int bitPattern)
     {
+        var a = Convert.ToBoolean((bitPattern & 0b100) >> 2);
+        var b = Convert.ToBoolean((bitPattern & 0b010) >> 1);
+        var y = Convert.ToBoolean(bitPattern & 0b001);
+
         var onResult = A.Fake<Func<bool,Task>>();
 
-        await _.Nor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+        await _.Nor(a, b, onResult);
 
-        A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        A.CallTo( () => onResult.Invoke(y)).MustHaveHappened();
     }
 
     [Theory]
-    [InlineData(0,0,0)]
-    [InlineData(0,1,1)]
-    [InlineData(1,0,1)]
-    [InlineData(1,1,0)]
-    public async void TestXor(int a, int b, int y)
+    [InlineData(0b000)] 
+    [InlineData(0b011)] 
+    [InlineData(0b101)] 
+    [InlineData(0b110)] 
+    public async void TestXor(int bitPattern)
     {
+        var a = Convert.ToBoolean((bitPattern & 0b100) >> 2);
+        var b = Convert.ToBoolean((bitPattern & 0b010) >> 1);
+        var y = Convert.ToBoolean(bitPattern & 0b001);
+
         var onResult = A.Fake<Func<bool,Task>>();
 
-        await _.Xor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+        await _.Xor(a, b, onResult);
 
-        A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        A.CallTo( () => onResult.Invoke(y)).MustHaveHappened();
     }
 
     [Theory]
-    [InlineData(0,0,1)]
-    [InlineData(0,1,0)]
-    [InlineData(1,0,0)]
-    [InlineData(1,1,1)]
-    public async void TestXnor(int a, int b, int y)
+    [InlineData(0b001)] 
+    [InlineData(0b010)] 
+    [InlineData(0b100)] 
+    [InlineData(0b111)] 
+    public async void TestXnor(int bitPattern)
     {
+        var a = Convert.ToBoolean((bitPattern & 0b100) >> 2);
+        var b = Convert.ToBoolean((bitPattern & 0b010) >> 1);
+        var y = Convert.ToBoolean(bitPattern & 0b001);
+
         var onResult = A.Fake<Func<bool,Task>>();
 
-        await _.Xnor(Convert.ToBoolean(a), Convert.ToBoolean(b), onResult);
+        await _.Xnor(a, b, onResult);
 
-        A.CallTo( () => onResult.Invoke(Convert.ToBoolean(y))).MustHaveHappened();
+        A.CallTo( () => onResult.Invoke(y)).MustHaveHappened();
     }
 }
